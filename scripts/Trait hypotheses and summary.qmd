@@ -1,0 +1,173 @@
+---
+title: "Using traits to quantify species' vulnerability to fire regime change"
+author: "Billy Geary"
+format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
+  echo: false
+---
+
+# Summary
+
+-   Fire regimes
+
+-   Species vulnerability layout
+
+-   Approach
+
+-   Results
+
+# Introduction
+
+Wildfire regimes are intensifying globally, with regions like Australia experiencing increasingly frequent and severe fires due to climate change, posing escalating risks to biodiversity and ecosystem function.
+
+Species' vulnerability to fire regimes is influenced by specific life history, behavioral, and ecological traits that affect their survival, reproduction, and habitat use under fire-prone conditions.
+
+Understanding which traits increase or mitigate vulnerability to fire regimes is crucial, as these traits can reveal patterns of resilience or risk among species and guide targeted conservation strategies.
+
+Vertebrate taxa in Australia exhibit a wide range of traits and adaptations to fire, but research has often been limited to isolated taxa or specific aspects of fire ecology, hindering a holistic understanding of vulnerability across species.
+
+Here, we aim to collate a comprehensive suite of traits across vertebrate taxa in Australia and use statistical analysis to identify groups of traits that are most predictive of vulnerability to various aspects of future fire regimes.
+
+This study contributes to fire ecology and conservation science by providing a framework for identifying trait-based vulnerability patterns, which can inform fire management and biodiversity protection in an era of changing fire dynamics.
+
+Changing fire regimes, caused by climate change and human activity, are seeing the frequency, extent and severity of fires increasing around the world. These changes are beginning to have considerable effects on biodiversity, including both species and ecosystems.
+
+Fire regimes are
+
+Fire regimes affect species through multiple pathways. However their impacts can be broadly categorised as i) direct mortality caused by large, severe fires, ii) reductions in survival and recruitment caused by fire that is either too frequent or not frequent enough, and iii) the exacerbation of co-occurring threats (e.g. predation, herbivory) following fires.
+
+Rapidly chaing fire regimes mean that managers need approaches for rapidly identifying and prioritising species, ecosystems, and therefore locations that may have elevated risks to changes in fire regimes.
+
+# Methods
+
+### Trait compilation
+
+### Measures of vulnerability to fire regime changes
+
+-   **Recently burned habitat**: To estimate a species' vulnerability to recently burnt habitat, we used fire response curves from the FAME project that estimate species relative abundances along a chronosequence of years since fire. Species with positive relationships with years since fire were considered species that were more vulnerable to recently burnt habitat.
+
+-   **Too frequent fire:** To estimate a species' vulnerability to too frequent fire, we used expert opinion on the expected increase in persistence probability at a given location from undertaking planned burning at frequencies less than the minimum tolerable fire interval. Species with a higher benefit value (larger change in persistence probability) were considered the most vulnerable to too frequent fire.
+
+-   **Frequent severe fire**: To estimate a species' vulnerability to frequent severe fire, we used expert opinion on the likelihood of persistence at sites that had been burnt 0, 1, 2 or 3 times severely. Species with a very large negative difference between persistence estimates at 0 times burnt and 3 times burnt severely were considered the most vulnerable.
+
+### Analysis
+
+This script pulls together traits for Victorian species from a variety of data sources, then assigns scores to those traits based on expected vulnerability to fire and then ranks species according to the summed scores.
+
+This follows a similar approach used by Payne et al. (2023) *Biological Conservation*
+
+Payne, S.L., Cunningham, S.J., Howes, C.G. and McKechnie, A.E., 2023. A trait-based assessment of southern African arid-zone birds' vulnerability to climate change. *Biological Conservation*, *287*, p.110338.
+
+<https://www.sciencedirect.com/science/article/pii/S0006320723004391>
+
+Traits
+
+Vulnerability during a fire
+
+Vulnerability immediately following a fire
+
+Vulnerability to increasing frequency of repeat fires
+
+The below table will be adjusted to fit into each of the three scenarios above respectively, as each of these will have different scoring approaches depending on the above.
+
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Trait                       | Description and scoring                                                                                                                                                                                         | Database                                   |
++=============================+=================================================================================================================================================================================================================+============================================+
+| Body mass                   | Species with larger body size (adult_mass_g) are able to move more easily, and so may be better able to flee fires (REF).                                                                                       | COMBINE                                    |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Home range size             | Species with larger home range sizes are likely to be able to move more easily and use a more diverse range of habitat, and so would be better able to flee fires (REF).                                        | COMBINE                                    |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Dispersal                   | Species with higher dispersal distance are more likely to be able to flee a fire as they are able to move greater distances (REF) and recolonise quickly post-fire (REF).                                       | COMBINE                                    |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Habitat breadth             | Values: 1-9                                                                                                                                                                                                     | COMBINE                                    |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | Species with a higher habitat breadth value are more likely to recolonise quickly post-fire, as they are likely more adaptable/generalist.                                                                      |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Stratum                     | Values: Ar = Arboreal, G=Ground, S=Scansorial, A=Aerial, M=Marine                                                                                                                                               | COMBINE                                    |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | Species that are arboreal most affected, then ground, then aerial, then marine (REF).                                                                                                                           |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Torpor                      | Values: 0 = no torpor, 1 = torpor                                                                                                                                                                               | COMBINE                                    |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | Hibernation and torpor constitute adaptations that enable species to survive during adverse periods (such as cold temperatures, food shortages and droughts) by lowering their body temperature and metabolism. |                                            |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | Species that are able to go into torpor may be better able to survive the immediate post-fire period where resources are reduced (REF).                                                                         |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Fossoriality                | Values: 1: fossorial and/or ground dwelling; 2: above ground dwelling                                                                                                                                           | COMBINE                                    |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | The species is above ground dwelling or ground/fossorial dwelling. This is probably a double up on Stratum but need to check.                                                                                   |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Diet Preference             | Values: 0-1 (proportion of diet made up of each category).                                                                                                                                                      | COMBINE                                    |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | Species with 50% or more of their diet made up of invertebrates or plants will be negatively affected by fire.                                                                                                  |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Diet breadth                | Values: 1-5 (number of dietary categories listed)                                                                                                                                                               | COMBINE                                    |
+|                             |                                                                                                                                                                                                                 |                                            |
+|                             | Species that have a narrower diet breadth are more likely to be affected negatively compared with species that have a wide diet breadth as they are more specialist vs. generalist.                             |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Number of young per year    | Species with a higher minimum number of young per year able to recover more quickly post-fire.                                                                                                                  | n_offspring per year \* n_litters per year |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Breeding events per year    | Species with a higher number of breeding events per year able to recover more quickly post-fire. Input into number of young per year.                                                                           | COMBINE                                    |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Minimum age of reproduction | Species with a lower minimum age of reproduction able to recover more quickly post-fire. Might be double up of number of young.                                                                                 | COMBINE                                    |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Lifespan                    | Species that have a longer lifespan ....                                                                                                                                                                        |                                            |
++-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+
+# Methods
+
+## Collation of traits
+
+Used traits mostly from the COMBINE database and AMNIOTE database for birds, mammals and reptiles. AmphiBIO is the main one for frogs.
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+vic_mammal_traits= read_rds("~/Library/CloudStorage/OneDrive-TheUniversityofMelbourne/Research/Projects/2024/fire_traits/fire_traits/data_clean/vic_mammal_traits.Rds")
+
+traits = vic_mammal_traits %>% 
+  arrange(desc(COMMON_NAME)) 
+kable(traits) %>%
+  scroll_box(width = "100%", height = "400px")
+```
+
+## Ranking based on a generic scoring system
+
+To test this approach i have scored each species for each trait between 0-1 at increments of 0.33. Values closer to 0 mean that trait makes that species relatively less vulnerable, values closer to 1 mean that trait makes the species relatively more vulnerable.
+
+For categorical variables, I have scored according to the hypotheses above in the tables.
+
+For continuous variables (e.g. Mass, home range size), i have used Jenks Natural Breaks which looks for natural clusters of the data that minimise the amount of variation in each class from the mean (i.e. it groups based on values that are closest together) but still assigns a value of 0,0.33, 0.66 or 1. Importantly, these values are based on the range of the dataset of species being used and so the values are dataset specific and need to be recalculated for new datasets.
+
+# Summary of results for Mammals
+
+```{r}
+library(tidyverse)
+library(knitr)
+vic_mammal_scores = read.csv("~/Library/CloudStorage/OneDrive-TheUniversityofMelbourne/Research/Projects/2024/fire_traits/fire_traits/data_clean/vic_mammal_scores.csv")
+
+scores = vic_mammal_scores %>% 
+  select(COMMON_NAME, sum_vulnerability_score, number_traits, vulnerability_score) %>%
+  arrange(desc(vulnerability_score))
+kable(scores)
+```
+
+# Still to do
+
+1.  Think really carefully about which traits - don't want to double count mechanisms
+
+2.  Split vulnerability scores by the three situations above (during fire, immediately post-fire, increased fire frequency)
+
+3.  Trait imputation for species with missing traits
+
+4.  Re-do vulnerability scores with some more sensible scoring where needed
+
+# Results
+
+# Discussion
+
+# References

@@ -1,0 +1,3101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Billy Geary">
+
+<title>Trait-based appraoch summary</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Trait hypotheses and summary_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Trait hypotheses and summary_files/libs/quarto-html/quarto.js"></script>
+<script src="Trait hypotheses and summary_files/libs/quarto-html/popper.min.js"></script>
+<script src="Trait hypotheses and summary_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Trait hypotheses and summary_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Trait hypotheses and summary_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Trait hypotheses and summary_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Trait hypotheses and summary_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Trait hypotheses and summary_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Trait hypotheses and summary_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Trait hypotheses and summary_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Trait hypotheses and summary_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Trait-based appraoch summary</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Billy Geary </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>This script pulls together traits for Victorian species from a variety of data sources, then assigns scores to those traits based on expected vulnerability to fire and then ranks species according to the summed scores.</p>
+<p>This follows a similar approach used by Payne et al.&nbsp;(2023) <em>Biological Conservation</em></p>
+<p>Payne, S.L., Cunningham, S.J., Howes, C.G. and McKechnie, A.E., 2023. A trait-based assessment of southern African arid-zone birds’ vulnerability to climate change.&nbsp;<em>Biological Conservation</em>,&nbsp;<em>287</em>, p.110338.</p>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S0006320723004391" class="uri">https://www.sciencedirect.com/science/article/pii/S0006320723004391</a></p>
+</section>
+<section id="traits" class="level2">
+<h2 class="anchored" data-anchor-id="traits">Traits</h2>
+<section id="vulnerability-during-a-fire" class="level3">
+<h3 class="anchored" data-anchor-id="vulnerability-during-a-fire">Vulnerability during a fire</h3>
+</section>
+<section id="vulnerability-immediately-following-a-fire" class="level3">
+<h3 class="anchored" data-anchor-id="vulnerability-immediately-following-a-fire">Vulnerability immediately following a fire</h3>
+</section>
+<section id="vulnerability-to-increasing-frequency-of-repeat-fires" class="level3">
+<h3 class="anchored" data-anchor-id="vulnerability-to-increasing-frequency-of-repeat-fires">Vulnerability to increasing frequency of repeat fires</h3>
+<p>The below table will be adjusted to fit into each of the three scenarios above respectively, as each of these will have different scoring approaches depending on the above.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 73%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Trait</th>
+<th>Description and scoring</th>
+<th>Database</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Body mass</td>
+<td>Species with larger body size (adult_mass_g) are able to move more easily, and so may be better able to flee fires (REF).</td>
+<td>COMBINE</td>
+</tr>
+<tr class="even">
+<td>Home range size</td>
+<td>Species with larger home range sizes are likely to be able to move more easily and use a more diverse range of habitat, and so would be better able to flee fires (REF).</td>
+<td>COMBINE</td>
+</tr>
+<tr class="odd">
+<td>Dispersal</td>
+<td>Species with higher dispersal distance are more likely to be able to flee a fire as they are able to move greater distances (REF) and recolonise quickly post-fire (REF).</td>
+<td>COMBINE</td>
+</tr>
+<tr class="even">
+<td>Habitat breadth</td>
+<td><p>Values: 1-9</p>
+<p>Species with a higher habitat breadth value are more likely to recolonise quickly post-fire, as they are likely more adaptable/generalist.</p></td>
+<td>COMBINE</td>
+</tr>
+<tr class="odd">
+<td>Stratum</td>
+<td><p>Values: Ar = Arboreal, G=Ground, S=Scansorial, A=Aerial, M=Marine</p>
+<p>Species that are arboreal most affected, then ground, then aerial, then marine (REF).</p></td>
+<td>COMBINE</td>
+</tr>
+<tr class="even">
+<td>Torpor</td>
+<td><p>Values: 0 = no torpor, 1 = torpor</p>
+<p>Hibernation and torpor constitute adaptations that enable species to survive during adverse periods (such as cold temperatures, food shortages and droughts) by lowering their body temperature and metabolism.</p>
+<p>Species that are able to go into torpor may be better able to survive the immediate post-fire period where resources are reduced (REF).</p></td>
+<td>COMBINE</td>
+</tr>
+<tr class="odd">
+<td>Fossoriality</td>
+<td><p>Values: 1: fossorial and/or ground dwelling; 2: above ground dwelling</p>
+<p>The species is above ground dwelling or ground/fossorial dwelling. This is probably a double up on Stratum but need to check.</p></td>
+<td>COMBINE</td>
+</tr>
+<tr class="even">
+<td>Diet Preference</td>
+<td><p>Values: 0-1 (proportion of diet made up of each category).</p>
+<p>Species with 50% or more of their diet made up of invertebrates or plants will be negatively affected by fire.</p></td>
+<td>COMBINE</td>
+</tr>
+<tr class="odd">
+<td>Diet breadth</td>
+<td><p>Values: 1-5 (number of dietary categories listed)</p>
+<p>Species that have a narrower diet breadth are more likely to be affected negatively compared with species that have a wide diet breadth as they are more specialist vs.&nbsp;generalist.</p></td>
+<td>COMBINE</td>
+</tr>
+<tr class="even">
+<td>Number of young per year</td>
+<td>Species with a higher minimum number of young per year able to recover more quickly post-fire.</td>
+<td>n_offspring per year * n_litters per year</td>
+</tr>
+<tr class="odd">
+<td>Breeding events per year</td>
+<td>Species with a higher number of breeding events per year able to recover more quickly post-fire. Input into number of young per year.</td>
+<td>COMBINE</td>
+</tr>
+<tr class="even">
+<td>Minimum age of reproduction</td>
+<td>Species with a lower minimum age of reproduction able to recover more quickly post-fire. Might be double up of number of young.</td>
+<td>COMBINE</td>
+</tr>
+<tr class="odd">
+<td>Lifespan</td>
+<td>Species that have a longer lifespan ….</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="collation-of-traits" class="level2">
+<h2 class="anchored" data-anchor-id="collation-of-traits">Collation of traits</h2>
+<p>Used traits mostly from the COMBINE database and AMNIOTE database for birds, mammals and reptiles. AmphiBIO is the main one for frogs.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">X</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">TAXON_ID</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Sci_Name</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">COMMON_NAME</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">TaxaGroup</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">TAXON_TYPE</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Extinction_Risk</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">FFG_Status</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Sci_Name_Alt</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Mass_g</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">home_range_km2</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">dispersal_km</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">habitat_breadth_n</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">foraging_stratum</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">terrestrial_volant</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">hibernation_torpor</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">fossoriality</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">det_diet_breadth_n</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">dphy_invertebrate</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">dphy_vertebrate</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">dphy_plant</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">litter_size_n</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">litters_per_year_n</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">age_first_reproduction_d</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">max_longevity_d</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_offspring_year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">124</td>
+<td style="text-align: right;">11027</td>
+<td style="text-align: left;">Antechinus flavipes</td>
+<td style="text-align: left;">Yellow-footed Antechinus</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Antechinus flavipes</td>
+<td style="text-align: right;">44.665</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1.417</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">90.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">361.080</td>
+<td style="text-align: right;">1423.500</td>
+<td style="text-align: right;">10.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">505</td>
+<td style="text-align: right;">11321</td>
+<td style="text-align: left;">Saccolaimus flaviventris</td>
+<td style="text-align: left;">Yellow-bellied Sheathtail Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Saccolaimus flaviventris</td>
+<td style="text-align: right;">45.250</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.012</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">409.591</td>
+<td style="text-align: right;">4817.423</td>
+<td style="text-align: right;">2.024000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">203</td>
+<td style="text-align: right;">11136</td>
+<td style="text-align: left;">Petaurus australis&nbsp;australis</td>
+<td style="text-align: left;">Yellow-bellied Glider</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Petaurus australis</td>
+<td style="text-align: right;">572.500</td>
+<td style="text-align: right;">0.360</td>
+<td style="text-align: right;">0.780</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">40.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">5840.000</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">313</td>
+<td style="text-align: right;">11324</td>
+<td style="text-align: left;">Tadarida australis</td>
+<td style="text-align: left;">White-striped Freetail Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Austronomus australis</td>
+<td style="text-align: right;">36.400</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">365.000</td>
+<td style="text-align: right;">5119.044</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">473</td>
+<td style="text-align: right;">11069</td>
+<td style="text-align: left;">Sminthopsis leucopus</td>
+<td style="text-align: left;">White-footed Dunnart</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Sminthopsis leucopus</td>
+<td style="text-align: right;">23.360</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">1.031</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">8.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">377.370</td>
+<td style="text-align: right;">912.500</td>
+<td style="text-align: right;">8.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">225</td>
+<td style="text-align: right;">11151</td>
+<td style="text-align: left;">Cercartetus concinnus minor</td>
+<td style="text-align: left;">Western Pygmy-possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Cercartetus concinnus</td>
+<td style="text-align: right;">40.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.180</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">4.300</td>
+<td style="text-align: right;">1.500</td>
+<td style="text-align: right;">410.620</td>
+<td style="text-align: right;">3765.583</td>
+<td style="text-align: right;">6.450000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">11263</td>
+<td style="text-align: left;">Macropus fuliginosus</td>
+<td style="text-align: left;">Western Grey Kangaroo</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Macropus fuliginosus</td>
+<td style="text-align: right;">26907.350</td>
+<td style="text-align: right;">2.520</td>
+<td style="text-align: right;">6.482</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">608.330</td>
+<td style="text-align: right;">8471.042</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">390</td>
+<td style="text-align: right;">11415</td>
+<td style="text-align: left;">Hydromys chrysogaster</td>
+<td style="text-align: left;">Water Rat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Hydromys chrysogaster</td>
+<td style="text-align: right;">738.085</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">5.601</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">3.800</td>
+<td style="text-align: right;">2.120</td>
+<td style="text-align: right;">158.000</td>
+<td style="text-align: right;">2664.500</td>
+<td style="text-align: right;">8.056000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">273</td>
+<td style="text-align: right;">11398</td>
+<td style="text-align: left;">Rattus lutreolus</td>
+<td style="text-align: left;">Swamp Rat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Rattus lutreolus</td>
+<td style="text-align: right;">112.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.318</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">30.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">4.910</td>
+<td style="text-align: right;">2.530</td>
+<td style="text-align: right;">112.000</td>
+<td style="text-align: right;">1609.042</td>
+<td style="text-align: right;">12.422300</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">525</td>
+<td style="text-align: right;">11034</td>
+<td style="text-align: left;">Antechinus minimus maritimus</td>
+<td style="text-align: left;">Swamp Antechinus</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Antechinus minimus</td>
+<td style="text-align: right;">52.560</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1.535</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">90.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">7.190</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">390.405</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">7.190000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">179</td>
+<td style="text-align: right;">11138</td>
+<td style="text-align: left;">Petaurus breviceps</td>
+<td style="text-align: left;">Sugar Glider</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Petaurus breviceps</td>
+<td style="text-align: right;">127.550</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.342</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">40.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">1.300</td>
+<td style="text-align: right;">403.020</td>
+<td style="text-align: right;">6497.000</td>
+<td style="text-align: right;">2.600000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">492</td>
+<td style="text-align: right;">11137</td>
+<td style="text-align: left;">Petaurus norfolcensis</td>
+<td style="text-align: left;">Squirrel Glider</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Petaurus norfolcensis</td>
+<td style="text-align: right;">272.500</td>
+<td style="text-align: right;">0.020</td>
+<td style="text-align: right;">0.519</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">40.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">1.570</td>
+<td style="text-align: right;">1.560</td>
+<td style="text-align: right;">405.447</td>
+<td style="text-align: right;">5405.042</td>
+<td style="text-align: right;">2.449200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">487</td>
+<td style="text-align: right;">11008</td>
+<td style="text-align: left;">Dasyurus maculatus maculatus</td>
+<td style="text-align: left;">Spot-tailed Quoll</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Dasyurus maculatus</td>
+<td style="text-align: right;">1782.000</td>
+<td style="text-align: right;">1.360</td>
+<td style="text-align: right;">1.456</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">30.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">4.470</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">395.390</td>
+<td style="text-align: right;">2482.000</td>
+<td style="text-align: right;">4.470000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">413</td>
+<td style="text-align: right;">11357</td>
+<td style="text-align: left;">Myotis macropus</td>
+<td style="text-align: left;">Southern Myotis</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Myotis macropus</td>
+<td style="text-align: right;">10.410</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">2.500</td>
+<td style="text-align: right;">303.711</td>
+<td style="text-align: right;">2889.821</td>
+<td style="text-align: right;">2.500000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">11808</td>
+<td style="text-align: left;">Mormopterus sp. 4</td>
+<td style="text-align: left;">Southern Freetail Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Mormopterus planiceps</td>
+<td style="text-align: right;">9.240</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.990</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">484.230</td>
+<td style="text-align: right;">2369.458</td>
+<td style="text-align: right;">0.990000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">11378</td>
+<td style="text-align: left;">Vespadelus regulus</td>
+<td style="text-align: left;">Southern Forest Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Vespadelus regulus</td>
+<td style="text-align: right;">5.050</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">430.629</td>
+<td style="text-align: right;">4067.368</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">458</td>
+<td style="text-align: right;">61092</td>
+<td style="text-align: left;">Isoodon obesulus obesulus</td>
+<td style="text-align: left;">Southern Brown Bandicoot</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Isoodon obesulus</td>
+<td style="text-align: right;">717.000</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">5.522</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">2.530</td>
+<td style="text-align: right;">2.200</td>
+<td style="text-align: right;">186.100</td>
+<td style="text-align: right;">2372.500</td>
+<td style="text-align: right;">5.566000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">482</td>
+<td style="text-align: right;">61332</td>
+<td style="text-align: left;">Nyctophilus corbeni</td>
+<td style="text-align: left;">South-eastern Long-eared Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Nyctophilus corbeni</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.610</td>
+<td style="text-align: right;">1.044</td>
+<td style="text-align: right;">414.330</td>
+<td style="text-align: right;">4046.039</td>
+<td style="text-align: right;">1.680840</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">491</td>
+<td style="text-align: right;">11458</td>
+<td style="text-align: left;">Pseudomys fumeus</td>
+<td style="text-align: left;">Smoky Mouse</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Pseudomys fumeus</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.246</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">3.500</td>
+<td style="text-align: right;">1.500</td>
+<td style="text-align: right;">195.065</td>
+<td style="text-align: right;">2372.500</td>
+<td style="text-align: right;">5.250000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">227</td>
+<td style="text-align: right;">11457</td>
+<td style="text-align: left;">Pseudomys apodemoides</td>
+<td style="text-align: left;">Silky Mouse</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Pseudomys apodemoides</td>
+<td style="text-align: right;">21.890</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.130</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">4.700</td>
+<td style="text-align: right;">3.000</td>
+<td style="text-align: right;">140.372</td>
+<td style="text-align: right;">1627.652</td>
+<td style="text-align: right;">14.100000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">331</td>
+<td style="text-align: right;">11003</td>
+<td style="text-align: left;">Tachyglossus aculeatus</td>
+<td style="text-align: left;">Short-beaked Echidna</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Tachyglossus aculeatus</td>
+<td style="text-align: right;">3169.500</td>
+<td style="text-align: right;">0.440</td>
+<td style="text-align: right;">11.439</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.580</td>
+<td style="text-align: right;">576.710</td>
+<td style="text-align: right;">18250.000</td>
+<td style="text-align: right;">0.580000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">11261</td>
+<td style="text-align: left;">Macropus rufogriseus</td>
+<td style="text-align: left;">Red-necked Wallaby</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Macropus rufogriseus</td>
+<td style="text-align: right;">16525.000</td>
+<td style="text-align: right;">0.120</td>
+<td style="text-align: right;">4.958</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.005</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">501.870</td>
+<td style="text-align: right;">6935.000</td>
+<td style="text-align: right;">1.005000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">11275</td>
+<td style="text-align: left;">Macropus rufus</td>
+<td style="text-align: left;">Red Kangaroo</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Macropus rufus</td>
+<td style="text-align: right;">35729.195</td>
+<td style="text-align: right;">4.080</td>
+<td style="text-align: right;">7.577</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.360</td>
+<td style="text-align: right;">547.500</td>
+<td style="text-align: right;">10950.000</td>
+<td style="text-align: right;">1.360000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">372</td>
+<td style="text-align: right;">5136</td>
+<td style="text-align: left;">Ornithorhynchus anatinus</td>
+<td style="text-align: left;">Platypus</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Ornithorhynchus anatinus</td>
+<td style="text-align: right;">1225.000</td>
+<td style="text-align: right;">0.070</td>
+<td style="text-align: right;">7.180</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">1.100</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">8249.000</td>
+<td style="text-align: right;">2.200000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">540</td>
+<td style="text-align: right;">11455</td>
+<td style="text-align: left;">Pseudomys novaehollandiae</td>
+<td style="text-align: left;">New Holland Mouse</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Pseudomys novaehollandiae</td>
+<td style="text-align: right;">17.400</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.114</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">4.050</td>
+<td style="text-align: right;">3.750</td>
+<td style="text-align: right;">138.697</td>
+<td style="text-align: right;">1456.958</td>
+<td style="text-align: right;">15.187500</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">546</td>
+<td style="text-align: right;">11156</td>
+<td style="text-align: left;">Burramys parvus</td>
+<td style="text-align: left;">Mountain Pygmy-possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Burramys parvus</td>
+<td style="text-align: right;">44.300</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.191</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">40.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">60.000</td>
+<td style="text-align: right;">3.550</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">365.000</td>
+<td style="text-align: right;">4380.000</td>
+<td style="text-align: right;">3.550000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">267</td>
+<td style="text-align: right;">11115</td>
+<td style="text-align: left;">Trichosurus cunninghami</td>
+<td style="text-align: left;">Mountain Brushtail Possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Trichosurus cunninghami</td>
+<td style="text-align: right;">3400.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2.078</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.137</td>
+<td style="text-align: right;">1.550</td>
+<td style="text-align: right;">527.604</td>
+<td style="text-align: right;">4260.062</td>
+<td style="text-align: right;">1.762350</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">419</td>
+<td style="text-align: right;">11480</td>
+<td style="text-align: left;">Notomys mitchelli</td>
+<td style="text-align: left;">Mitchell's Hopping-mouse</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Notomys mitchellii</td>
+<td style="text-align: right;">52.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.209</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">3.280</td>
+<td style="text-align: right;">3.530</td>
+<td style="text-align: right;">115.395</td>
+<td style="text-align: right;">1934.500</td>
+<td style="text-align: right;">11.578400</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">415</td>
+<td style="text-align: right;">11055</td>
+<td style="text-align: left;">Ningaui yvonneae</td>
+<td style="text-align: left;">Mallee Ningaui</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Ningaui yvonneae</td>
+<td style="text-align: right;">11.550</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.730</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">7.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">289.002</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">14.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">471</td>
+<td style="text-align: right;">11175</td>
+<td style="text-align: left;">Potorous tridactylus trisulcatus</td>
+<td style="text-align: left;">Long-nosed Potoroo</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Potorous tridactylus</td>
+<td style="text-align: right;">1054.670</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1.091</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">399.210</td>
+<td style="text-align: right;">5496.292</td>
+<td style="text-align: right;">2.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">392</td>
+<td style="text-align: right;">11097</td>
+<td style="text-align: left;">Perameles nasuta</td>
+<td style="text-align: left;">Long-nosed Bandicoot</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Perameles nasuta</td>
+<td style="text-align: right;">720.260</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.885</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">2.565</td>
+<td style="text-align: right;">2.920</td>
+<td style="text-align: right;">121.660</td>
+<td style="text-align: right;">2044.000</td>
+<td style="text-align: right;">7.489800</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">484</td>
+<td style="text-align: right;">11179</td>
+<td style="text-align: left;">Potorous longipes</td>
+<td style="text-align: left;">Long-footed Potoroo</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Potorous longipes</td>
+<td style="text-align: right;">1742.530</td>
+<td style="text-align: right;">0.290</td>
+<td style="text-align: right;">1.439</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.720</td>
+<td style="text-align: right;">893.560</td>
+<td style="text-align: right;">5587.542</td>
+<td style="text-align: right;">1.720000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">11152</td>
+<td style="text-align: left;">Cercartetus lepidus</td>
+<td style="text-align: left;">Little Pygmy-possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Cercartetus lepidus</td>
+<td style="text-align: right;">10.015</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">3.665</td>
+<td style="text-align: right;">1.550</td>
+<td style="text-align: right;">372.301</td>
+<td style="text-align: right;">2702.070</td>
+<td style="text-align: right;">5.680750</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">11379</td>
+<td style="text-align: left;">Vespadelus vulturnus</td>
+<td style="text-align: left;">Little Forest Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Vespadelus vulturnus</td>
+<td style="text-align: right;">3.770</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">370.317</td>
+<td style="text-align: right;">212.917</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">228</td>
+<td style="text-align: right;">11362</td>
+<td style="text-align: left;">Scotorepens greyii</td>
+<td style="text-align: left;">Little Broad-nosed Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Scotorepens greyii</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.471</td>
+<td style="text-align: right;">1.009</td>
+<td style="text-align: right;">441.790</td>
+<td style="text-align: right;">5349.252</td>
+<td style="text-align: right;">1.484239</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">11335</td>
+<td style="text-align: left;">Nyctophilus geoffroyi</td>
+<td style="text-align: left;">Lesser Long-eared Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Nyctophilus geoffroyi</td>
+<td style="text-align: right;">8.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.783</td>
+<td style="text-align: right;">1.143</td>
+<td style="text-align: right;">358.547</td>
+<td style="text-align: right;">2156.542</td>
+<td style="text-align: right;">2.037969</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">536</td>
+<td style="text-align: right;">11141</td>
+<td style="text-align: left;">Gymnobelideus leadbeateri</td>
+<td style="text-align: left;">Leadbeater's Possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Critically Endangered</td>
+<td style="text-align: left;">Gymnobelideus leadbeateri</td>
+<td style="text-align: right;">133.660</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.350</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">50.000</td>
+<td style="text-align: right;">1.540</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">365.000</td>
+<td style="text-align: right;">5146.500</td>
+<td style="text-align: right;">3.080000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">11381</td>
+<td style="text-align: left;">Vespadelus darlingtoni</td>
+<td style="text-align: left;">Large Forest Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Vespadelus darlingtoni</td>
+<td style="text-align: right;">6.060</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.037</td>
+<td style="text-align: right;">384.164</td>
+<td style="text-align: right;">91.250</td>
+<td style="text-align: right;">1.037000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">355</td>
+<td style="text-align: right;">11162</td>
+<td style="text-align: left;">Phascolarctos cinereus</td>
+<td style="text-align: left;">Koala</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Phascolarctos cinereus</td>
+<td style="text-align: right;">5646.870</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">2.747</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.005</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">8066.500</td>
+<td style="text-align: right;">1.005000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">218</td>
+<td style="text-align: right;">11809</td>
+<td style="text-align: left;">Mormopterus sp. 3</td>
+<td style="text-align: left;">Inland Freetail Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Ozimops petersi</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">93.823</td>
+<td style="text-align: right;">2.735</td>
+<td style="text-align: right;">2.348</td>
+<td style="text-align: right;">1.109</td>
+<td style="text-align: right;">1.047</td>
+<td style="text-align: right;">873.744</td>
+<td style="text-align: right;">8527.022</td>
+<td style="text-align: right;">1.161123</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">11819</td>
+<td style="text-align: left;">Vespadelus baverstocki</td>
+<td style="text-align: left;">Inland Forest Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Vespadelus baverstocki</td>
+<td style="text-align: right;">4.300</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.755</td>
+<td style="text-align: right;">1.155</td>
+<td style="text-align: right;">344.078</td>
+<td style="text-align: right;">908.091</td>
+<td style="text-align: right;">2.027025</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">182</td>
+<td style="text-align: right;">11364</td>
+<td style="text-align: left;">Scotorepens balstoni</td>
+<td style="text-align: left;">Inland Broad-nosed Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Scotorepens balstoni</td>
+<td style="text-align: right;">11.700</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.500</td>
+<td style="text-align: right;">1.060</td>
+<td style="text-align: right;">412.866</td>
+<td style="text-align: right;">3540.500</td>
+<td style="text-align: right;">1.590000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: right;">11468</td>
+<td style="text-align: left;">Pseudomys shortridgei</td>
+<td style="text-align: left;">Heath Mouse</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Pseudomys shortridgei</td>
+<td style="text-align: right;">64.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.234</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">3.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">308.781</td>
+<td style="text-align: right;">2190.000</td>
+<td style="text-align: right;">3.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: right;">11280</td>
+<td style="text-align: left;">Pteropus poliocephalus</td>
+<td style="text-align: left;">Grey-headed Flying-fox</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Pteropus poliocephalus</td>
+<td style="text-align: right;">675.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">760.410</td>
+<td style="text-align: right;">8614.000</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">410</td>
+<td style="text-align: right;">11133</td>
+<td style="text-align: left;">Petauroides volans</td>
+<td style="text-align: left;">Greater Glider</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Petauroides volans</td>
+<td style="text-align: right;">1141.000</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">1.140</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">5475.000</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">236</td>
+<td style="text-align: right;">11349</td>
+<td style="text-align: left;">Chalinolobus gouldii</td>
+<td style="text-align: left;">Gould's Wattled Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Chalinolobus gouldii</td>
+<td style="text-align: right;">15.870</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.705</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">457.180</td>
+<td style="text-align: right;">2761.833</td>
+<td style="text-align: right;">1.278750</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">168</td>
+<td style="text-align: right;">11334</td>
+<td style="text-align: left;">Nyctophilus gouldi</td>
+<td style="text-align: left;">Gould's Long-eared Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Nyctophilus gouldi</td>
+<td style="text-align: right;">11.320</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.770</td>
+<td style="text-align: right;">1.685</td>
+<td style="text-align: right;">349.750</td>
+<td style="text-align: right;">365.000</td>
+<td style="text-align: right;">2.982450</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">524</td>
+<td style="text-align: right;">11050</td>
+<td style="text-align: left;">Planigale gilesi</td>
+<td style="text-align: left;">Gile's Planigale</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Planigale gilesi</td>
+<td style="text-align: right;">9.100</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.650</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">40.000</td>
+<td style="text-align: right;">60.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">5.230</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">287.980</td>
+<td style="text-align: right;">1825.000</td>
+<td style="text-align: right;">10.460000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">381</td>
+<td style="text-align: right;">11147</td>
+<td style="text-align: left;">Acrobates pygmaeus</td>
+<td style="text-align: left;">Feathertail Glider</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Acrobates pygmaeus</td>
+<td style="text-align: right;">13.000</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">3.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">212.910</td>
+<td style="text-align: right;">3212.000</td>
+<td style="text-align: right;">6.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">224</td>
+<td style="text-align: right;">11072</td>
+<td style="text-align: left;">Sminthopsis crassicaudata</td>
+<td style="text-align: left;">Fat-tailed Dunnart</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Sminthopsis crassicaudata</td>
+<td style="text-align: right;">15.980</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.856</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">7.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">144.000</td>
+<td style="text-align: right;">1852.375</td>
+<td style="text-align: right;">14.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">61266</td>
+<td style="text-align: left;">Osphranter robustus robustus</td>
+<td style="text-align: left;">Eastern Wallaroo</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Macropus robustus</td>
+<td style="text-align: right;">29647.900</td>
+<td style="text-align: right;">0.980</td>
+<td style="text-align: right;">6.838</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.310</td>
+<td style="text-align: right;">747.595</td>
+<td style="text-align: right;">8760.000</td>
+<td style="text-align: right;">1.310000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11150</td>
+<td style="text-align: left;">Cercartetus nanus</td>
+<td style="text-align: left;">Eastern Pygmy-possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Cercartetus nanus</td>
+<td style="text-align: right;">60.000</td>
+<td style="text-align: right;">0.006</td>
+<td style="text-align: right;">0.226</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">3.980</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">152.080</td>
+<td style="text-align: right;">3765.583</td>
+<td style="text-align: right;">7.960000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">488</td>
+<td style="text-align: right;">11303</td>
+<td style="text-align: left;">Rhinolophus megaphyllus megaphyllus</td>
+<td style="text-align: left;">Eastern Horseshoe Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Endangered</td>
+<td style="text-align: left;">Rhinolophus megaphyllus</td>
+<td style="text-align: right;">8.650</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">855.640</td>
+<td style="text-align: right;">2737.500</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">11265</td>
+<td style="text-align: left;">Macropus giganteus</td>
+<td style="text-align: left;">Eastern Grey Kangaroo</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Macropus giganteus</td>
+<td style="text-align: right;">41454.945</td>
+<td style="text-align: right;">0.410</td>
+<td style="text-align: right;">8.222</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">812.600</td>
+<td style="text-align: right;">9125.000</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">11839</td>
+<td style="text-align: left;">Mormopterus sp. 2</td>
+<td style="text-align: left;">Eastern Freetail Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Mormopterus norfolkensis</td>
+<td style="text-align: right;">8.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.036</td>
+<td style="text-align: right;">419.237</td>
+<td style="text-align: right;">2555.000</td>
+<td style="text-align: right;">1.036000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">362</td>
+<td style="text-align: right;">11372</td>
+<td style="text-align: left;">Falsistrellus tasmaniensis</td>
+<td style="text-align: left;">Eastern False Pipistrelle</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Falsistrellus tasmaniensis</td>
+<td style="text-align: right;">22.540</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.324</td>
+<td style="text-align: right;">0.980</td>
+<td style="text-align: right;">604.328</td>
+<td style="text-align: right;">6386.869</td>
+<td style="text-align: right;">1.297520</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">198</td>
+<td style="text-align: right;">11811</td>
+<td style="text-align: left;">Scotorepens orion</td>
+<td style="text-align: left;">Eastern Broad-nosed Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Scotorepens orion</td>
+<td style="text-align: right;">11.765</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.500</td>
+<td style="text-align: right;">1.068</td>
+<td style="text-align: right;">421.836</td>
+<td style="text-align: right;">3540.500</td>
+<td style="text-align: right;">1.602000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">106</td>
+<td style="text-align: right;">11033</td>
+<td style="text-align: left;">Antechinus swainsonii</td>
+<td style="text-align: left;">Dusky Antechinus</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Antechinus swainsonii</td>
+<td style="text-align: right;">58.690</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1.620</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">90.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">8.120</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">348.215</td>
+<td style="text-align: right;">1213.625</td>
+<td style="text-align: right;">8.120000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">360</td>
+<td style="text-align: right;">11165</td>
+<td style="text-align: left;">Vombatus ursinus</td>
+<td style="text-align: left;">Common Wombat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Vombatus ursinus</td>
+<td style="text-align: right;">25750.000</td>
+<td style="text-align: right;">0.080</td>
+<td style="text-align: right;">6.328</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.770</td>
+<td style="text-align: right;">783.650</td>
+<td style="text-align: right;">10959.125</td>
+<td style="text-align: right;">0.770000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">351</td>
+<td style="text-align: right;">11129</td>
+<td style="text-align: left;">Pseudocheirus peregrinus</td>
+<td style="text-align: left;">Common Ringtail Possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Pseudocheirus peregrinus</td>
+<td style="text-align: right;">859.300</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.975</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.945</td>
+<td style="text-align: right;">1.500</td>
+<td style="text-align: right;">365.000</td>
+<td style="text-align: right;">3686.500</td>
+<td style="text-align: right;">2.917500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">226</td>
+<td style="text-align: right;">11061</td>
+<td style="text-align: left;">Sminthopsis murina murina</td>
+<td style="text-align: left;">Common Dunnart</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Sminthopsis murina</td>
+<td style="text-align: right;">16.350</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.866</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">8.000</td>
+<td style="text-align: right;">2.000</td>
+<td style="text-align: right;">194.010</td>
+<td style="text-align: right;">730.000</td>
+<td style="text-align: right;">16.000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">247</td>
+<td style="text-align: right;">11113</td>
+<td style="text-align: left;">Trichosurus vulpecula</td>
+<td style="text-align: left;">Common Brushtail Possum</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Trichosurus vulpecula</td>
+<td style="text-align: right;">2001.167</td>
+<td style="text-align: right;">0.030</td>
+<td style="text-align: right;">1.552</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.007</td>
+<td style="text-align: right;">1.600</td>
+<td style="text-align: right;">547.500</td>
+<td style="text-align: right;">5803.500</td>
+<td style="text-align: right;">1.611200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">497</td>
+<td style="text-align: right;">61343</td>
+<td style="text-align: left;">Miniopterus orianae bassanii</td>
+<td style="text-align: left;">Common Bent-wing Bat (southern ssp.)</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Critically Endangered</td>
+<td style="text-align: left;">Miniopterus schreibersii</td>
+<td style="text-align: right;">11.185</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.995</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">723.660</td>
+<td style="text-align: right;">8030.000</td>
+<td style="text-align: right;">0.995000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">466</td>
+<td style="text-align: right;">61342</td>
+<td style="text-align: left;">Miniopterus orianae oceanensis</td>
+<td style="text-align: left;">Common Bent-wing Bat (eastern ssp.)</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Critically Endangered</td>
+<td style="text-align: left;">Miniopterus schreibersii</td>
+<td style="text-align: right;">11.185</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.995</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">723.660</td>
+<td style="text-align: right;">8030.000</td>
+<td style="text-align: right;">0.995000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">245</td>
+<td style="text-align: right;">11351</td>
+<td style="text-align: left;">Chalinolobus morio</td>
+<td style="text-align: left;">Chocolate Wattled Bat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Bats</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Chalinolobus morio</td>
+<td style="text-align: right;">8.910</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">1.190</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">407.607</td>
+<td style="text-align: right;">3125.543</td>
+<td style="text-align: right;">1.190000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">269</td>
+<td style="text-align: right;">11395</td>
+<td style="text-align: left;">Rattus fuscipes</td>
+<td style="text-align: left;">Bush Rat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Rattus fuscipes</td>
+<td style="text-align: right;">127.290</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.341</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">30.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">4.580</td>
+<td style="text-align: right;">3.300</td>
+<td style="text-align: right;">136.870</td>
+<td style="text-align: right;">1934.500</td>
+<td style="text-align: right;">15.114000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">557</td>
+<td style="text-align: right;">11215</td>
+<td style="text-align: left;">Petrogale penicillata</td>
+<td style="text-align: left;">Brush-tailed Rock-wallaby</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Critically Endangered</td>
+<td style="text-align: left;">Petrogale penicillata</td>
+<td style="text-align: right;">6465.800</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">2.959</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.480</td>
+<td style="text-align: right;">604.265</td>
+<td style="text-align: right;">5256.000</td>
+<td style="text-align: right;">1.480000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">462</td>
+<td style="text-align: right;">11017</td>
+<td style="text-align: left;">Phascogale tapoatafa</td>
+<td style="text-align: left;">Brush-tailed Phascogale</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Victoria</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Phascogale tapoatafa</td>
+<td style="text-align: right;">157.000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.383</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ar</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">30.000</td>
+<td style="text-align: right;">70.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">6.595</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">401.265</td>
+<td style="text-align: right;">2156.542</td>
+<td style="text-align: right;">6.595000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">515</td>
+<td style="text-align: right;">11438</td>
+<td style="text-align: left;">Mastacomys fuscus mordicus</td>
+<td style="text-align: left;">Broad-toothed Rat</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Australia</td>
+<td style="text-align: left;">Vulnerable</td>
+<td style="text-align: left;">Mastacomys fuscus</td>
+<td style="text-align: right;">136.860</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.355</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">1.595</td>
+<td style="text-align: right;">2.178</td>
+<td style="text-align: right;">192.195</td>
+<td style="text-align: right;">1621.286</td>
+<td style="text-align: right;">3.473910</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">333</td>
+<td style="text-align: right;">11242</td>
+<td style="text-align: left;">Wallabia bicolor</td>
+<td style="text-align: left;">Black Wallaby</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Wallabia bicolor</td>
+<td style="text-align: right;">14812.475</td>
+<td style="text-align: right;">0.110</td>
+<td style="text-align: right;">4.668</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">100.000</td>
+<td style="text-align: right;">1.020</td>
+<td style="text-align: right;">1.400</td>
+<td style="text-align: right;">273.750</td>
+<td style="text-align: right;">6132.000</td>
+<td style="text-align: right;">1.428000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">102</td>
+<td style="text-align: right;">11028</td>
+<td style="text-align: left;">Antechinus agilis</td>
+<td style="text-align: left;">Agile Antechinus</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">Mammals</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">NotListed</td>
+<td style="text-align: left;">Antechinus agilis</td>
+<td style="text-align: right;">26.250</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.143</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">80.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">10.000</td>
+<td style="text-align: right;">7.500</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">401.160</td>
+<td style="text-align: right;">1974.042</td>
+<td style="text-align: right;">7.500000</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+</section>
+<section id="ranking-based-on-a-generic-scoring-system" class="level2">
+<h2 class="anchored" data-anchor-id="ranking-based-on-a-generic-scoring-system">Ranking based on a generic scoring system</h2>
+<p>To test this approach i have scored each species for each trait between 0-1 at increments of 0.33. Values closer to 0 mean that trait makes that species relatively less vulnerable, values closer to 1 mean that trait makes the species relatively more vulnerable.</p>
+<p>For categorical variables, I have scored according to the hypotheses above in the tables.</p>
+<p>For continuous variables (e.g.&nbsp;Mass, home range size), i have used Jenks Natural Breaks which looks for natural clusters of the data that minimise the amount of variation in each class from the mean (i.e.&nbsp;it groups based on values that are closest together) but still assigns a value of 0,0.33, 0.66 or 1. Importantly, these values are based on the range of the dataset of species being used and so the values are dataset specific and need to be recalculated for new datasets.</p>
+</section>
+</section>
+<section id="summary-of-results-for-mammals" class="level1">
+<h1>Summary of results for Mammals</h1>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 25%">
+<col style="width: 14%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">COMMON_NAME</th>
+<th style="text-align: right;">sum_vulnerability_score</th>
+<th style="text-align: right;">number_traits</th>
+<th style="text-align: right;">vulnerability_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Leadbeater’s Possum</td>
+<td style="text-align: right;">8.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.8640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Grey-headed Flying-fox</td>
+<td style="text-align: right;">6.32</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.7900000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mountain Brushtail Possum</td>
+<td style="text-align: right;">6.98</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.7755556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Koala</td>
+<td style="text-align: right;">7.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.7640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Feathertail Glider</td>
+<td style="text-align: right;">7.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.7640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greater Glider</td>
+<td style="text-align: right;">7.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.7640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Long-nosed Potoroo</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.7377778</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Long-footed Potoroo</td>
+<td style="text-align: right;">7.30</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.7300000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Southern Freetail Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.7114286</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eastern Freetail Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.7114286</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agile Antechinus</td>
+<td style="text-align: right;">6.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.7011111</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dusky Antechinus</td>
+<td style="text-align: right;">6.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.7011111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mallee Ningaui</td>
+<td style="text-align: right;">6.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.7011111</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Platypus</td>
+<td style="text-align: right;">6.97</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.6970000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Little Forest Bat</td>
+<td style="text-align: right;">5.32</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6650000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yellow-bellied Glider</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.6640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Ringtail Possum</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.6640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Wombat</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.6640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Squirrel Glider</td>
+<td style="text-align: right;">6.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.6640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spot-tailed Quoll</td>
+<td style="text-align: right;">6.30</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.6300000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Smoky Mouse</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.6266667</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Heath Mouse</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.6266667</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brush-tailed Rock-wallaby</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.6266667</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Southern Forest Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Large Forest Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gould’s Long-eared Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastern Broad-nosed Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">White-striped Freetail Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastern False Pipistrelle</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Southern Myotis</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Yellow-bellied Sheathtail Bat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.6225000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inland Freetail Bat</td>
+<td style="text-align: right;">4.32</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.6171429</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Southern Brown Bandicoot</td>
+<td style="text-align: right;">5.97</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5970000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">White-footed Dunnart</td>
+<td style="text-align: right;">5.97</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5970000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Little Pygmy-possum</td>
+<td style="text-align: right;">5.32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5911111</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yellow-footed Antechinus</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Dunnart</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Silky Mouse</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Long-nosed Bandicoot</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mitchell’s Hopping-mouse</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Swamp Antechinus</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Holland Mouse</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5900000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Bent-wing Bat (eastern ssp.)</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.5685714</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Bent-wing Bat (southern ssp.)</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.5685714</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastern Grey Kangaroo</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Red-necked Wallaby</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sugar Glider</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Brushtail Possum</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black Wallaby</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eastern Wallaroo</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Broad-toothed Rat</td>
+<td style="text-align: right;">5.64</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5640000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Water Rat</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5533333</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">South-eastern Long-eared Bat</td>
+<td style="text-align: right;">3.32</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.5533333</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mountain Pygmy-possum</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5533333</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastern Pygmy-possum</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5310000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Western Grey Kangaroo</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5310000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Red Kangaroo</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5310000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Short-beaked Echidna</td>
+<td style="text-align: right;">5.31</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.5310000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Western Pygmy-possum</td>
+<td style="text-align: right;">4.65</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5166667</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brush-tailed Phascogale</td>
+<td style="text-align: right;">4.65</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.5166667</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inland Forest Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lesser Long-eared Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inland Broad-nosed Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Little Broad-nosed Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gould’s Wattled Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chocolate Wattled Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastern Horseshoe Bat</td>
+<td style="text-align: right;">3.98</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.4975000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fat-tailed Dunnart</td>
+<td style="text-align: right;">4.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.4788889</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bush Rat</td>
+<td style="text-align: right;">4.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.4788889</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Swamp Rat</td>
+<td style="text-align: right;">4.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.4788889</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gile’s Planigale</td>
+<td style="text-align: right;">3.31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.3677778</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="still-to-do" class="level1">
+<h1>Still to do</h1>
+<ol type="1">
+<li><p>Think really carefully about which traits - don’t want to double count mechanisms</p></li>
+<li><p>Split vulnerability scores by the three situations above (during fire, immediately post-fire, increased fire frequency)</p></li>
+<li><p>Trait imputation for species with missing traits</p></li>
+<li><p>Re-do vulnerability scores with some more sensible scoring where needed</p></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

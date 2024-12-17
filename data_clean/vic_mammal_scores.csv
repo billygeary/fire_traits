@@ -1,0 +1,72 @@
+"","TAXON_ID","Sci_Name","COMMON_NAME","TaxaGroup","TAXON_TYPE","Extinction_Risk","Sci_Name_Alt","score_mass","score_homerange","score_dispersal","score_habitat_breadth","score_foraging_stratum","score_torpor","score_diet_breadth","score_n_offspring","score_plant_diet","score_inv_diet","sum_vulnerability_score","number_traits","vulnerability_score"
+"1",11150,"Cercartetus nanus","Eastern Pygmy-possum","Mammals","Mammals","NotListed","Cercartetus nanus",0.66,0.66,0.66,1,1,0,0,0.33,1,0,5.31,10,0.531
+"2",11152,"Cercartetus lepidus","Little Pygmy-possum","Mammals","Mammals","NotListed","Cercartetus lepidus",0.66,NA,1,1,1,0,0,0.66,1,0,5.32,9,0.591111111111111
+"3",11265,"Macropus giganteus","Eastern Grey Kangaroo","Mammals","Mammals","NotListed","Macropus giganteus",0.33,0.66,0.33,0,0.66,1,1,0.66,1,0,5.64,10,0.564
+"4",11263,"Macropus fuliginosus","Western Grey Kangaroo","Mammals","Mammals","NotListed","Macropus fuliginosus",0.33,0.33,0.33,0,0.66,1,1,0.66,1,0,5.31,10,0.531
+"5",11261,"Macropus rufogriseus","Red-necked Wallaby","Mammals","Mammals","NotListed","Macropus rufogriseus",0.33,0.66,0.33,0,0.66,1,1,0.66,1,0,5.64,10,0.564
+"6",11275,"Macropus rufus","Red Kangaroo","Mammals","Mammals","NotListed","Macropus rufus",0.33,0.33,0.33,0,0.66,1,1,0.66,1,0,5.31,10,0.531
+"7",11379,"Vespadelus vulturnus","Little Forest Bat","Mammals","Bats","NotListed","Vespadelus vulturnus",1,NA,NA,1,0.66,0,1,0.66,0,1,5.32,8,0.665
+"8",11378,"Vespadelus regulus","Southern Forest Bat","Mammals","Bats","NotListed","Vespadelus regulus",0.66,NA,NA,1,0.66,0,1,0.66,0,1,4.98,8,0.6225
+"9",11381,"Vespadelus darlingtoni","Large Forest Bat","Mammals","Bats","NotListed","Vespadelus darlingtoni",0.66,NA,NA,1,0.66,0,1,0.66,0,1,4.98,8,0.6225
+"10",11028,"Antechinus agilis","Agile Antechinus","Mammals","Mammals","NotListed","Antechinus agilis",0.66,NA,0.66,1,0.66,1,1,0.33,0,1,6.31,9,0.701111111111111
+"11",11033,"Antechinus swainsonii","Dusky Antechinus","Mammals","Mammals","NotListed","Antechinus swainsonii",0.66,NA,0.66,1,0.66,1,1,0.33,0,1,6.31,9,0.701111111111111
+"12",11027,"Antechinus flavipes","Yellow-footed Antechinus","Mammals","Mammals","NotListed","Antechinus flavipes",0.66,NA,0.66,0,0.66,1,1,0.33,0,1,5.31,9,0.59
+"13",11819,"Vespadelus baverstocki","Inland Forest Bat","Mammals","Bats","NotListed","Vespadelus baverstocki",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"14",11335,"Nyctophilus geoffroyi","Lesser Long-eared Bat","Mammals","Bats","NotListed","Nyctophilus geoffroyi",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"15",11334,"Nyctophilus gouldi","Gould's Long-eared Bat","Mammals","Bats","NotListed","Nyctophilus gouldi",0.66,NA,NA,1,0.66,0,1,0.66,0,1,4.98,8,0.6225
+"16",11808,"Mormopterus sp. 4","Southern Freetail Bat","Mammals","Bats","NotListed","Mormopterus planiceps",0.66,NA,NA,NA,0.66,1,1,0.66,0,1,4.98,7,0.711428571428572
+"17",11138,"Petaurus breviceps","Sugar Glider","Mammals","Mammals","NotListed","Petaurus breviceps",0.66,0.66,0.66,0,1,1,0,0.66,1,0,5.64,10,0.564
+"18",11364,"Scotorepens balstoni","Inland Broad-nosed Bat","Mammals","Bats","NotListed","Scotorepens balstoni",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"19",11839,"Mormopterus sp. 2","Eastern Freetail Bat","Mammals","Bats","NotListed","Mormopterus norfolkensis",0.66,NA,NA,NA,0.66,1,1,0.66,0,1,4.98,7,0.711428571428572
+"20",11811,"Scotorepens orion","Eastern Broad-nosed Bat","Mammals","Bats","NotListed","Scotorepens orion",0.66,NA,NA,1,0.66,0,1,0.66,0,1,4.98,8,0.6225
+"21",11136,"Petaurus australis australis","Yellow-bellied Glider","Mammals","Mammals","Australia","Petaurus australis",0.66,0.66,0.66,1,1,1,0,0.66,1,0,6.64,10,0.664
+"22",11809,"Mormopterus sp. 3","Inland Freetail Bat","Mammals","Bats","NotListed","Ozimops petersi",NA,NA,NA,0,0.66,1,1,0.66,0,1,4.32,7,0.617142857142857
+"23",11072,"Sminthopsis crassicaudata","Fat-tailed Dunnart","Mammals","Mammals","Victoria","Sminthopsis crassicaudata",0.66,NA,0.66,0,0.66,0,1,0.33,0,1,4.31,9,0.478888888888889
+"24",11151,"Cercartetus concinnus minor","Western Pygmy-possum","Mammals","Mammals","NotListed","Cercartetus concinnus",0.66,NA,0.66,1,1,0,0,0.33,1,0,4.65,9,0.516666666666667
+"25",11061,"Sminthopsis murina murina","Common Dunnart","Mammals","Mammals","Victoria","Sminthopsis murina",0.66,NA,0.66,0,0.66,1,1,0.33,0,1,5.31,9,0.59
+"26",11457,"Pseudomys apodemoides","Silky Mouse","Mammals","Mammals","NotListed","Pseudomys apodemoides",0.66,NA,0.66,1,0.66,1,0,0.33,1,0,5.31,9,0.59
+"27",11362,"Scotorepens greyii","Little Broad-nosed Bat","Mammals","Bats","NotListed","Scotorepens greyii",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"28",11349,"Chalinolobus gouldii","Gould's Wattled Bat","Mammals","Bats","NotListed","Chalinolobus gouldii",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"29",11351,"Chalinolobus morio","Chocolate Wattled Bat","Mammals","Bats","NotListed","Chalinolobus morio",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"30",11113,"Trichosurus vulpecula","Common Brushtail Possum","Mammals","Mammals","NotListed","Trichosurus vulpecula",0.66,0.66,0.66,0,1,1,0,0.66,1,0,5.64,10,0.564
+"31",11115,"Trichosurus cunninghami","Mountain Brushtail Possum","Mammals","Mammals","NotListed","Trichosurus cunninghami",0.66,NA,0.66,1,1,1,1,0.66,1,0,6.98,9,0.775555555555556
+"32",11395,"Rattus fuscipes","Bush Rat","Mammals","Mammals","NotListed","Rattus fuscipes",0.66,NA,0.66,0,0.66,1,0,0.33,1,0,4.31,9,0.478888888888889
+"33",11398,"Rattus lutreolus","Swamp Rat","Mammals","Mammals","NotListed","Rattus lutreolus",0.66,NA,0.66,0,0.66,1,0,0.33,1,0,4.31,9,0.478888888888889
+"34",11324,"Tadarida australis","White-striped Freetail Bat","Mammals","Bats","NotListed","Austronomus australis",0.66,NA,NA,0,0.66,1,1,0.66,0,1,4.98,8,0.6225
+"35",11003,"Tachyglossus aculeatus","Short-beaked Echidna","Mammals","Mammals","NotListed","Tachyglossus aculeatus",0.66,0.66,0.33,0,0.66,0,1,1,0,1,5.31,10,0.531
+"36",11242,"Wallabia bicolor","Black Wallaby","Mammals","Mammals","NotListed","Wallabia bicolor",0.33,0.66,0.33,0,0.66,1,1,0.66,1,0,5.64,10,0.564
+"37",11129,"Pseudocheirus peregrinus","Common Ringtail Possum","Mammals","Mammals","NotListed","Pseudocheirus peregrinus",0.66,0.66,0.66,0,1,1,1,0.66,1,0,6.64,10,0.664
+"38",11162,"Phascolarctos cinereus","Koala","Mammals","Mammals","NotListed","Phascolarctos cinereus",0.66,0.66,0.66,1,1,1,1,0.66,1,0,7.64,10,0.764
+"39",11165,"Vombatus ursinus","Common Wombat","Mammals","Mammals","NotListed","Vombatus ursinus",0.33,0.66,0.33,1,0.66,1,1,0.66,1,0,6.64,10,0.664
+"40",11372,"Falsistrellus tasmaniensis","Eastern False Pipistrelle","Mammals","Bats","NotListed","Falsistrellus tasmaniensis",0.66,NA,NA,1,0.66,0,1,0.66,0,1,4.98,8,0.6225
+"41",5136,"Ornithorhynchus anatinus","Platypus","Mammals","Mammals","Victoria","Ornithorhynchus anatinus",0.66,0.66,0.33,1,0.66,1,1,0.66,0,1,6.97,10,0.697
+"42",11147,"Acrobates pygmaeus","Feathertail Glider","Mammals","Mammals","NotListed","Acrobates pygmaeus",0.66,0.66,0.66,1,1,1,1,0.66,0,1,7.64,10,0.764
+"43",11415,"Hydromys chrysogaster","Water Rat","Mammals","Mammals","NotListed","Hydromys chrysogaster",0.66,NA,0.33,0,0.66,1,1,0.33,0,1,4.98,9,0.553333333333333
+"44",11097,"Perameles nasuta","Long-nosed Bandicoot","Mammals","Mammals","NotListed","Perameles nasuta",0.66,NA,0.66,0,0.66,1,1,0.33,0,1,5.31,9,0.59
+"45",11133,"Petauroides volans","Greater Glider","Mammals","Mammals","Australia","Petauroides volans",0.66,0.66,0.66,1,1,1,1,0.66,1,0,7.64,10,0.764
+"46",11357,"Myotis macropus","Southern Myotis","Mammals","Bats","NotListed","Myotis macropus",0.66,NA,NA,1,0.66,0,1,0.66,0,1,4.98,8,0.6225
+"47",11055,"Ningaui yvonneae","Mallee Ningaui","Mammals","Mammals","NotListed","Ningaui yvonneae",0.66,NA,0.66,1,0.66,1,1,0.33,0,1,6.31,9,0.701111111111111
+"48",11480,"Notomys mitchelli","Mitchell's Hopping-mouse","Mammals","Mammals","NotListed","Notomys mitchellii",0.66,NA,0.66,1,0.66,1,0,0.33,1,0,5.31,9,0.59
+"49",61092,"Isoodon obesulus obesulus","Southern Brown Bandicoot","Mammals","Mammals","Australia","Isoodon obesulus",0.66,0.66,0.33,0,0.66,1,1,0.66,0,1,5.97,10,0.597
+"50",11017,"Phascogale tapoatafa","Brush-tailed Phascogale","Mammals","Mammals","Victoria","Phascogale tapoatafa",0.66,NA,0.66,1,1,1,0,0.33,0,0,4.65,9,0.516666666666667
+"51",61342,"Miniopterus orianae oceanensis","Common Bent-wing Bat (eastern ssp.)","Mammals","Bats","Victoria","Miniopterus schreibersii",0.66,NA,NA,NA,0.66,0,1,0.66,0,1,3.98,7,0.568571428571429
+"52",11175,"Potorous tridactylus trisulcatus","Long-nosed Potoroo","Mammals","Mammals","Australia","Potorous tridactylus",0.66,NA,0.66,1,0.66,1,1,0.66,1,0,6.64,9,0.737777777777778
+"53",11069,"Sminthopsis leucopus","White-footed Dunnart","Mammals","Mammals","Victoria","Sminthopsis leucopus",0.66,0.66,0.66,0,0.66,1,1,0.33,0,1,5.97,10,0.597
+"54",61332,"Nyctophilus corbeni","South-eastern Long-eared Bat","Mammals","Bats","Victoria","Nyctophilus corbeni",NA,NA,NA,NA,0.66,0,1,0.66,0,1,3.32,6,0.553333333333333
+"55",11179,"Potorous longipes","Long-footed Potoroo","Mammals","Mammals","Australia","Potorous longipes",0.66,0.66,0.66,1,0.66,1,1,0.66,1,0,7.3,10,0.73
+"56",11008,"Dasyurus maculatus maculatus","Spot-tailed Quoll","Mammals","Mammals","Victoria","Dasyurus maculatus",0.66,0.66,0.66,1,0.66,1,1,0.66,0,0,6.3,10,0.63
+"57",11303,"Rhinolophus megaphyllus megaphyllus","Eastern Horseshoe Bat","Mammals","Bats","Victoria","Rhinolophus megaphyllus",0.66,NA,NA,0,0.66,0,1,0.66,0,1,3.98,8,0.4975
+"58",11458,"Pseudomys fumeus","Smoky Mouse","Mammals","Mammals","Victoria","Pseudomys fumeus",0.66,NA,0.66,1,0.66,1,0,0.66,1,0,5.64,9,0.626666666666667
+"59",11137,"Petaurus norfolcensis","Squirrel Glider","Mammals","Mammals","Victoria","Petaurus norfolcensis",0.66,0.66,0.66,1,1,1,0,0.66,1,0,6.64,10,0.664
+"60",61343,"Miniopterus orianae bassanii","Common Bent-wing Bat (southern ssp.)","Mammals","Bats","Victoria","Miniopterus schreibersii",0.66,NA,NA,NA,0.66,0,1,0.66,0,1,3.98,7,0.568571428571429
+"61",61266,"Osphranter robustus robustus","Eastern Wallaroo","Mammals","Mammals","Victoria","Macropus robustus",0.33,0.66,0.33,0,0.66,1,1,0.66,1,0,5.64,10,0.564
+"62",11468,"Pseudomys shortridgei","Heath Mouse","Mammals","Mammals","Australia","Pseudomys shortridgei",0.66,NA,0.66,1,0.66,1,0,0.66,1,0,5.64,9,0.626666666666667
+"63",11280,"Pteropus poliocephalus","Grey-headed Flying-fox","Mammals","Bats","Victoria","Pteropus poliocephalus",0.66,NA,NA,1,1,1,1,0.66,1,0,6.32,8,0.79
+"64",11321,"Saccolaimus flaviventris","Yellow-bellied Sheathtail Bat","Mammals","Bats","Victoria","Saccolaimus flaviventris",0.66,NA,NA,0,0.66,1,1,0.66,0,1,4.98,8,0.6225
+"65",11438,"Mastacomys fuscus mordicus","Broad-toothed Rat","Mammals","Mammals","Australia","Mastacomys fuscus",0.66,1,0.66,0,0.66,1,0,0.66,1,0,5.64,10,0.564
+"66",11050,"Planigale gilesi","Gile's Planigale","Mammals","Mammals","Victoria","Planigale gilesi",0.66,NA,0.66,1,0.66,0,0,0.33,0,0,3.31,9,0.367777777777778
+"67",11034,"Antechinus minimus maritimus","Swamp Antechinus","Mammals","Mammals","Australia","Antechinus minimus",0.66,NA,0.66,0,0.66,1,1,0.33,0,1,5.31,9,0.59
+"68",11141,"Gymnobelideus leadbeateri","Leadbeater's Possum","Mammals","Mammals","Australia","Gymnobelideus leadbeateri",0.66,0.66,0.66,1,1,1,1,0.66,1,1,8.64,10,0.864
+"69",11455,"Pseudomys novaehollandiae","New Holland Mouse","Mammals","Mammals","Victoria","Pseudomys novaehollandiae",0.66,NA,0.66,1,0.66,1,0,0.33,1,0,5.31,9,0.59
+"70",11156,"Burramys parvus","Mountain Pygmy-possum","Mammals","Mammals","Australia","Burramys parvus",0.66,NA,0.66,1,1,0,0,0.66,1,0,4.98,9,0.553333333333333
+"71",11215,"Petrogale penicillata","Brush-tailed Rock-wallaby","Mammals","Mammals","Victoria","Petrogale penicillata",0.66,NA,0.66,0,0.66,1,1,0.66,1,0,5.64,9,0.626666666666667
