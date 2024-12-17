@@ -38,6 +38,8 @@ vic_fauna_traits_imputed = readRDS("data_clean/vic_fauna_traits_imputed.Rds")
 #################
 #### Mammals #### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #################
+#### Find Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 mammal_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Mammals") %>% mutate(stratum = as.factor(stratum),
                                                                                       nesting = as.factor(nesting),
                                                                                       diet_simple = as.factor(diet_simple),
@@ -77,7 +79,7 @@ smp_modelling = mammal_traits %>% select(meanben_firefreq, all_of(all_traits)) %
 fame_modelling = mammal_traits %>% select(fame_lm_slope, all_of(all_traits)) %>%
   drop_na(fame_lm_slope)
 
-brt_model_cv <- gbm.step(data = smp_modelling, 
+mammal_brt_smp <- gbm.step(data = smp_modelling, 
                          gbm.x = 2:17,
                          gbm.y = 1,
                          family = "gaussian", 
@@ -85,25 +87,13 @@ brt_model_cv <- gbm.step(data = smp_modelling,
                          learning.rate = 0.005,
                          bag.fraction = 0.5)
 
-summary(brt_model_cv)
-
-plot.gbm(brt_model_cv, i.var = 3)
-
-# smp_brt_model <- gbm(
-#   formula = traits_formula_smp,
-#   data = smp_modelling,
-#   distribution = "gaussian",
-#   n.trees = 3000,        # Number of trees
-#   interaction.depth = 2, # Tree depth to capture interactions
-#   shrinkage = 0.01,      # Learning rate
-#   bag.fraction = 0.4, 
-#   cv.folds = 10           # Cross-validation for tuning
-# )
+summary(mammal_brt_smp)
+plot.gbm(mammal_brt_smp, i.var = 3)
 
 # Look at the variable importance
-importance = summary(brt_model_cv)  # Variable importance
+mammal.importance = summary(mammal_brt_smp)  # Variable importance
 
-importance %>%
+mammal.importance.plot = mammal.importance %>%
   left_join(trait_df, by = "var") %>%
   mutate(var = fct_reorder(var, rel.inf, .desc = FALSE)) %>%  # Reorder `var` based on `rel.inf`
   ggplot(aes(x = var, y = rel.inf, fill = Group)) + geom_col() + 
@@ -111,26 +101,18 @@ importance %>%
   scale_fill_viridis_d() + theme_minimal() +
   coord_flip()
 
-####################################################
+ggsave(plot = mammal.importance.plot, filename = "plots/mammal.importance.plot.jpg", width = 8, height = 4)
+
 #### Clustering Species by Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-####################################################
 traits_scaled = mammal_traits %>% 
   select(all_of(all_traits)) %>% 
-  select(all_of(importance$var)) # Order to match with vector of importance
+  select(all_of(mammal.importance$var)) # Order to match with vector of importance
 
-trait.importance = importance$rel.inf/100
+mammal.importance = mammal.importance$rel.inf/100
 
 # Compute Gower distance matrix
-gower_dist <- daisy(traits_scaled, metric = "gower", weights = trait.importance)
-
+gower_dist <- daisy(traits_scaled, metric = "gower", weights = mammal.importance)
 gmm_model <- Mclust(gower_dist, G=1:12) # Try between 1-20 clusters to see which is best. 
-
-# Summarize the model
-summary(gmm_model)
-
-# Plot the clustering result
-plot(gmm_model, what = "BIC")
-#plot(gmm_model, what = "classification")
 
 # Add cluster assignments to the dataset
 mammal_traits$cluster <- gmm_model$classification
@@ -143,14 +125,10 @@ trait_summary <- mammal_traits %>%
   summarise(mean_firefreq = mean(meanben_firefreq, na.rm = TRUE),
             sd_firefreq = sd(meanben_firefreq, na.rm = TRUE))
 
-print(trait_summary)
-
 ggplot(mammal_traits) + geom_boxplot(aes(x=as.factor(cluster), y = meanben_firefreq))
 
 ## NMDS
-library(vegan)
 nmds <- metaMDS(gower_dist,method="gower", k = 2, trymax = 30)
-plot(nmds)
 
 # Extract NMDS scores and perform clustering
 nmds_scores <- as.data.frame(scores(nmds))
@@ -178,10 +156,11 @@ plot_pcoa <- function(data.in) {
   return(pcoa_plot)
 }
 
-plot_pcoa(nmds_scores)
+(mammal.pcoa = plot_pcoa(nmds_scores))
+ggsave(plot = mammal.pcoa, filename = "plots/mammal.pcoa.plot.jpg", width = 6, height = 4, scale =2)
+
 
 ## Add the traits to the plot
-
 # Compute correlations of traits with NMDS axes
 trait_correlations <- envfit(nmds, traits_scaled, permutations = 999)
 
@@ -217,24 +196,21 @@ plot_pcoa_with_vectors <- function(data.in, vectors) {
 # Generate NMDS plot with trait vectors
 nmds_scores$NMDS1 <- nmds_scores[,1]
 nmds_scores$NMDS2 <- nmds_scores[,2]
+mammal.pcoa.vectors.plot <- plot_pcoa_with_vectors(nmds_scores, scaled_vectors)
+ggsave(plot = mammal.pcoa.vectors.plot , filename = "plots/mammal.pcoa.vectors.plot.jpg", width = 6, height = 4, scale =2)
 
-final_plot <- plot_pcoa_with_vectors(nmds_scores, scaled_vectors)
-print(final_plot)
-
-
+# Save
 write.csv(mammal_traits, "data_clean/mammal_traits_clustered.csv")
 
 #################
 #### Birds ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #################
+#### Find Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 birds_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Birds") %>% mutate(stratum = as.factor(stratum),
                                                                                    stratum_aquatic = as.factor(stratum_aquatic),
                                                                                       nesting = as.factor(nesting),
                                                                                       diet_simple = as.factor(diet_simple),
                                                                                       dominant_pyrome = as.factor(dominant_pyrome)) %>% droplevels()
-
-summary(birds_traits)
-
 # Traits of interest
 all_traits <- c("Mass_g", "stratum", "nesting", "stratum_aquatic",
                 "diet_simple", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
@@ -248,7 +224,7 @@ traits_formula <- as.formula(paste(response_var, "~", paste(all_traits, collapse
 smp_modelling = birds_traits %>% select(meanben_firefreq, all_of(all_traits)) %>%
   drop_na(meanben_firefreq)
 
-brt_model_cv <- gbm.step(data = smp_modelling, 
+birds.brt.smp <- gbm.step(data = smp_modelling, 
                          gbm.x = 2:14,
                          gbm.y = 1,
                          family = "gaussian", 
@@ -256,14 +232,13 @@ brt_model_cv <- gbm.step(data = smp_modelling,
                          learning.rate = 0.005,
                          bag.fraction = 0.5)
 
-summary(brt_model_cv)
-
-plot.gbm(brt_model_cv, i.var = 1)
+summary(birds.brt.smp)
+plot.gbm(birds.brt.smp, i.var = 1)
 
 # Look at the variable importance
-importance = summary(brt_model_cv)  # Variable importance
+bird.importance = summary(birds.brt.smp)  # Variable importance
 
-importance %>%
+bird.importance.plot = bird.importance %>%
   left_join(trait_df, by = "var") %>%
   mutate(var = fct_reorder(var, rel.inf, .desc = FALSE)) %>%  # Reorder `var` based on `rel.inf`
   ggplot(aes(x = var, y = rel.inf, fill = Group)) + geom_col() + 
@@ -271,26 +246,22 @@ importance %>%
   scale_fill_viridis_d() + theme_minimal() +
   coord_flip()
 
-####################################################
-#### Clustering Species by Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-####################################################
-traits_scaled = birds_traits %>% 
-  select(all_of(importance$var))  %>% 
-  select(all_of(importance$var)) # Order to match with vector of importance
+ggsave(plot = bird.importance.plot, filename = "plots/bird.importance.plot.jpg", width = 8, height = 4)
 
-trait.importance = importance$rel.inf/100
+#### Clustering Species by Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+traits_scaled = birds_traits %>% 
+  select(all_of(bird.importance$var))  %>% 
+  select(all_of(bird.importance$var)) # Order to match with vector of importance
+
+bird.trait.importance = bird.importance$rel.inf/100
 
 # Compute Gower distance matrix
-gower_dist <- daisy(traits_scaled, metric = "gower", weights=trait.importance)
+gower_dist <- daisy(traits_scaled, metric = "gower", weights=bird.trait.importance)
 
 gmm_model <- Mclust(gower_dist, G=1:25) # Try between 1-20 clusters to see which is best. 
 
 # Summarize the model
 summary(gmm_model)
-
-# Plot the clustering result
-plot(gmm_model, what = "BIC")
-#plot(gmm_model, what = "classification")
 
 # Add cluster assignments to the dataset
 birds_traits$cluster <- gmm_model$classification
@@ -306,8 +277,6 @@ ggplot(birds_traits) + geom_boxplot(aes(x=as.factor(cluster), y = meanben_firefr
 
 ## NMDS
 nmds <- metaMDS(gower_dist,method="gower", k = 2, trymax = 30)
-plot(nmds)
-
 # Extract NMDS scores and perform clustering
 nmds_scores <- as.data.frame(scores(nmds))
 nmds_scores$Species = birds_traits$Common_Name
@@ -336,8 +305,8 @@ plot_pcoa <- function(data.in) {
   return(pcoa_plot)
 }
 
-plot_pcoa(nmds_scores)
-
+(bird.pcoa = plot_pcoa(nmds_scores))
+ggsave(plot = bird.pcoa, filename = "plots/bird.pcoa.plot.jpg", width = 8, height = 4, scale =2)
 
 write.csv(birds_traits, "data_clean/birds_traits_clustered.csv")
 
@@ -361,19 +330,7 @@ traits_formula <- as.formula(paste(response_var, "~", paste(all_traits, collapse
 smp_modelling = reptile_traits  %>% select(meanben_firefreq, all_of(all_traits)) %>%
   drop_na(meanben_firefreq)
 
-reptile.lm = lm(traits_formula, data = smp_modelling)
-reptile.da <-dominanceAnalysis(reptile.lm)
-averageContribution(reptile.da)
-
-brt_model_cv <- gbm.step(data = smp_modelling, 
-                         gbm.x = 2:18,
-                         gbm.y = 1,
-                         family = "gaussian",
-                         learning.rate = 0.001,
-                         step.size = 10)
-summary(brt_model_cv)
-
-brt_model <- gbm(
+reptile.brt.smp <- gbm(
   formula = traits_formula,
   data = smp_modelling,
   distribution = "gaussian",
@@ -384,14 +341,11 @@ brt_model <- gbm(
   cv.folds = 10           # Cross-validation for tuning
 )
 
-summary(brt_model)
-
-(importance <- summary(brt_model))
-
+(reptile.importance <- summary(reptile.brt.smp))
 
 # Look at the variable importance
-importance = summary(brt_model_cv)  # Variable importance
-importance %>%
+reptile.importance = summary(brt_model_cv)  # Variable importance
+reptile.importance.plot = reptile.importance %>%
   left_join(trait_df, by = "var") %>%
   mutate(var = fct_reorder(var, rel.inf, .desc = FALSE)) %>%  # Reorder `var` based on `rel.inf`
   ggplot(aes(x = var, y = rel.inf, fill = Group)) + geom_col() + 
@@ -399,16 +353,17 @@ importance %>%
   scale_fill_viridis_d() + theme_minimal() +
   coord_flip()
 
+ggsave(plot = reptile.importance.plot, filename = "plots/reptile.importance.plot.jpg", width = 8, height = 4)
 
 ####################################################
 #### Clustering Species by Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################
 
 traits_scaled = reptile_traits %>% 
-  select(all_of(importance$var))  %>% 
-  select(all_of(importance$var)) # Order to match with vector of importance
+  select(all_of(reptile.importance$var))  %>% 
+  select(all_of(reptile.importance$var)) # Order to match with vector of importance
 
-trait.importance = importance$rel.inf/100
+trait.importance = reptile.importance$rel.inf/100
 
 # Compute Gower distance matrix
 gower_dist <- daisy(traits_scaled, metric = "gower", 
@@ -466,7 +421,8 @@ plot_pcoa <- function(data.in) {
   return(pcoa_plot)
 }
 
-plot_pcoa(nmds_scores)
+(reptile.pcoa = plot_pcoa(nmds_scores))
+ggsave(plot = reptile.pcoa, filename = "plots/reptile.pcoa.plot.jpg", width = 6, height = 4, scale =2)
 
 write.csv(reptile_traits, "data_clean/reptile_traits_clustered.csv")
 
@@ -482,10 +438,12 @@ frog_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Amphibians") %>% 
 all_traits <- c("scale(Mass_g)", "scale(biggest_patch_size)", "scale(n_habitat_patches)", "dominant_pyrome", "scale(pyrome_breadth)")
 # Create the formula
 response_var <- "meanben_firefreq"
-traits_formula <- as.formula(paste(response_var, "~", paste(all_traits, collapse = " + ")))
+smp_formula <- as.formula(paste(response_var, "~", paste(all_traits, collapse = " + ")))
 
 # Fit the model as a Boosted Regression Tree
 dat_modelling = frog_traits %>% drop_na(meanben_firefreq)
+
+# Dataset is too small for BRTs
 
 model = glm(traits_formula, data = dat_modelling)
 all_traits <- c("Mass_g", "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth")
@@ -493,7 +451,7 @@ all_traits <- c("Mass_g", "biggest_patch_size", "n_habitat_patches", "dominant_p
 summary(model)
 
 brt_model <- gbm(
-  formula = traits_formula,
+  formula = smp_formula,
   data = dat_modelling,
   distribution = "gaussian",
   n.trees = 3000,        # Number of trees
@@ -507,6 +465,12 @@ brt_model <- gbm(
 ####################################################
 #### Clustering Species by Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ####################################################
+frog_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Amphibians") %>% mutate(stratum = as.factor(stratum),
+                                                                                       nesting = as.factor(nesting),
+                                                                                       diet= as.factor(diet),
+                                                                                       dominant_pyrome = as.factor(dominant_pyrome))
+all_traits <- c("Mass_g", "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth")
+
 traits_scaled = frog_traits %>% select(Common_Name,meanben_firefreq, all_of(all_traits)) %>% drop_na()
 
 # Compute Gower distance matrix
@@ -524,6 +488,8 @@ plot(gmm_model, what = "BIC")
 # Add cluster assignments to the dataset
 traits_scaled$cluster <- gmm_model$classification
 
+frog_traits = left_join(frog_traits, traits_scaled)
+
 # Summarize meanben_firefreq by cluster
 species_clusters <- traits_scaled %>% select(Common_Name, cluster)
 
@@ -535,10 +501,7 @@ trait_summary <- traits_scaled %>%
 ggplot(traits_scaled) + geom_boxplot(aes(x=as.factor(cluster), y = meanben_firefreq))
 
 ## NMDS
-library(vegan)
 nmds <- metaMDS(gower_dist,method="gower", k = 2, trymax = 30)
-plot(nmds)
-
 # Extract NMDS scores and perform clustering
 nmds_scores <- as.data.frame(scores(nmds))
 nmds_scores$Species = traits_scaled$Common_Name
@@ -565,8 +528,11 @@ plot_pcoa <- function(data.in) {
   return(pcoa_plot)
 }
 
-plot_pcoa(nmds_scores)
+(frog.pcoa <- plot_pcoa(nmds_scores))
 
-write.csv(frog_traits_selected, "data_clean/frog_traits_clustered.csv")
+ggsave(plot = frog.pcoa, filename = "plots/frog.pcoa.plot.jpg", width = 6, height = 4, scale =2)
 
+write.csv(frog_traits, "data_clean/frog_traits_clustered.csv")
+
+#### ENDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
