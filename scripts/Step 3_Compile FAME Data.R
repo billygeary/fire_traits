@@ -116,8 +116,9 @@ ee.data.out.cats = ee.data.out %>% mutate(ee_Sig = case_when(ee_model == "poly" 
                                  TRUE ~ "Neutral"))
 
 
-full.data = left_join(ee.data.out.cats, data.out.cats, by="TAXON_ID")
+fame.data = ee.data.out.cats %>% select(TAXON_ID, ee_model, ee_lm_slope)
 
+write.csv(fame.data, "data_clean/fame_ffo_slopes.csv")
 
 
 

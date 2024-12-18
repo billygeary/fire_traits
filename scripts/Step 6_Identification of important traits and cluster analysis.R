@@ -42,7 +42,7 @@ vic_fauna_traits_imputed = readRDS("data_clean/vic_fauna_traits_imputed.Rds")
 
 mammal_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Mammals") %>% mutate(stratum = as.factor(stratum),
                                                                                       nesting = as.factor(nesting),
-                                                                                      diet_simple = as.factor(diet_simple),
+                                                                                      diet = as.factor(diet),
                                                                                       dominant_pyrome = as.factor(dominant_pyrome),
                                                                                       volant = as.factor(volant), 
                                                                                       hibernation_torpor = as.factor(hibernation_torpor))
@@ -66,8 +66,15 @@ colnames(trait_df) <- c("var", "Group")
 
 # Traits of interest
 all_traits <- c("Mass_g", "home_range_km2", "dispersal_km", "stratum", "nesting", "volant", "hibernation_torpor", 
-                "diet_simple", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
+                "diet", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
                 "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth")
+
+all_traits_clean_names = data.frame(var = all_traits, 
+                                    traits_label = c("Mass (g)", "Home Range (km2)", "Dispersal (km)", "Stratum", "Nesting Preference",
+                                                     "Volant", "Hibernation/Torpor", "Diet Category", "Litter Size", "Litters/Yr", "Longevity", "Offspring/Yr", 
+                                                     "Size of Largest Habitat Patch", "Number of Habitat Patches", "Dominant Pyrome", "Pyrome Breadth"))
+trait_df = left_join(trait_df, all_traits_clean_names)
+
 # Create the formula
 traits_formula_smp <- as.formula(paste("meanben_firefreq", "~", paste(all_traits, collapse = " + ")))
 traits_formula_fame <- as.formula(paste("fame_lm_slope", "~", paste(all_traits, collapse = " + ")))
@@ -88,15 +95,16 @@ mammal_brt_smp <- gbm.step(data = smp_modelling,
                          bag.fraction = 0.5)
 
 summary(mammal_brt_smp)
-plot.gbm(mammal_brt_smp, i.var = 3)
+plot.gbm(mammal_brt_smp, i.var = 8)
 
 # Look at the variable importance
 mammal.importance = summary(mammal_brt_smp)  # Variable importance
+all_traits_clean_names$traits_label = as.factor(all_traits_clean_names$traits_label)
 
 mammal.importance.plot = mammal.importance %>%
   left_join(trait_df, by = "var") %>%
-  mutate(var = fct_reorder(var, rel.inf, .desc = FALSE)) %>%  # Reorder `var` based on `rel.inf`
-  ggplot(aes(x = var, y = rel.inf, fill = Group)) + geom_col() + 
+  mutate(traits_label = fct_reorder(traits_label, rel.inf, .desc = FALSE)) %>%  # Reorder `var` based on `rel.inf`
+  ggplot(aes(x = traits_label, y = rel.inf, fill = Group)) + geom_col() + 
   labs(fill = "Trait Group", x="Trait", y = "Relative Influence (%)", title="Mammal Trait Importance") + 
   scale_fill_viridis_d() + theme_minimal() +
   coord_flip()
@@ -209,11 +217,11 @@ write.csv(mammal_traits, "data_clean/mammal_traits_clustered.csv")
 birds_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Birds") %>% mutate(stratum = as.factor(stratum),
                                                                                    stratum_aquatic = as.factor(stratum_aquatic),
                                                                                       nesting = as.factor(nesting),
-                                                                                      diet_simple = as.factor(diet_simple),
+                                                                                      diet= as.factor(diet),
                                                                                       dominant_pyrome = as.factor(dominant_pyrome)) %>% droplevels()
 # Traits of interest
 all_traits <- c("Mass_g", "stratum", "nesting", "stratum_aquatic",
-                "diet_simple", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
+                "diet", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
                 "biggest_patch_size", "n_habitat_patches", 
                 "dominant_pyrome", "pyrome_breadth")
 # Create the formula
@@ -233,7 +241,7 @@ birds.brt.smp <- gbm.step(data = smp_modelling,
                          bag.fraction = 0.5)
 
 summary(birds.brt.smp)
-plot.gbm(birds.brt.smp, i.var = 1)
+plot.gbm(birds.brt.smp, i.var = 5)
 
 # Look at the variable importance
 bird.importance = summary(birds.brt.smp)  # Variable importance
@@ -314,12 +322,12 @@ write.csv(birds_traits, "data_clean/birds_traits_clustered.csv")
 #### Reptiles #### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #################
 reptile_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Reptiles") %>%
-    mutate(across(c(stratum, nesting, diet_simple, dominant_pyrome, stratum_aerial, stratum_arboreal_insessorial, stratum_aquatic,
+    mutate(across(c(stratum, nesting, diet, dominant_pyrome, stratum_aerial, stratum_arboreal_insessorial, stratum_aquatic,
                     stratum_fossorial, stratum_saxicolous, stratum_terrestrial), as.factor))
 # Traits of interest
 all_traits <- c("Mass_g", "home_range_km2", "dispersal_km", "stratum_arboreal_insessorial", "stratum_aquatic",
                 "stratum_fossorial", "stratum_saxicolous", "stratum_terrestrial",
-                "diet_simple", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
+                "diet", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
                 "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth")
 
 # Create the formula
@@ -344,7 +352,7 @@ reptile.brt.smp <- gbm(
 (reptile.importance <- summary(reptile.brt.smp))
 
 # Look at the variable importance
-reptile.importance = summary(brt_model_cv)  # Variable importance
+reptile.importance = summary(reptile.brt.smp)  # Variable importance
 reptile.importance.plot = reptile.importance %>%
   left_join(trait_df, by = "var") %>%
   mutate(var = fct_reorder(var, rel.inf, .desc = FALSE)) %>%  # Reorder `var` based on `rel.inf`

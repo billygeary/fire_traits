@@ -22,6 +22,7 @@ birds.traits = read.csv("data_raw/birds/AVONET1_BirdLife.csv")
 frog.traits = read.csv("data_raw/amphibians/AmphiBIO_v1.csv")
 # ReptTraits : https://www.nature.com/articles/s41597-024-03079-5#Abs1
 reptile.traits =  read_excel("data_raw/reptiles/ReptTraits%20dataset%20v1-1.xlsx")
+squambase.traits =  read_excel("data_raw/reptiles/SquamBase1.xlsx")
 
 pyromes = read.csv("data_clean/pyrome_species.csv") %>% select(-X)
 fame = read.csv("data_clean/fame_erp_slopes.csv") %>% select(-X)
@@ -401,36 +402,61 @@ mutate_at(vars("Microhabitat", "Habitat", "Diet", "maximum_longevity_y",
                "litter_size_n", "litters_per_year_n"), ~ na_if(., "NA")) %>%
   mutate_at(vars(maximum_longevity_y, litter_size_n, litters_per_year_n), as.numeric)
 
-reptiles = left_join(reptiles, reptile.traits, by = c("Sci_Name_Alt"="Species"))
+reptiles.traits = reptiles %>% 
+  select(TAXON_ID, Sci_Name, Sci_Name_Alt) %>% 
+  left_join(reptile.traits, by = c("Sci_Name_Alt"="Species"))
+
+squambase.traits = squambase.traits %>% 
+  select(`Species name (Binomial)`,
+         `maximum mass (derived from allometric equations; in log10, g)`,
+         substrate, 
+         Diet, `Foraging mode`,
+         `Average home range size (minimum; m^2)`,
+         `Maximum Longevity (years)`,
+         `maximum mean brood size`,
+         `Yearly broods (maximum)`)
+ 
+reptiles.traits = left_join(reptiles.traits, squambase.traits, by = c("Sci_Name_Alt" = "Species name (Binomial)"))
+
+reptiles.traits.combined = reptiles.traits %>%
+  mutate_at(vars(`Maximum Longevity (years)`, `maximum mean brood size`, `Yearly broods (maximum)`),as.numeric) %>%
+  mutate(Microhabitat = coalesce(substrate, Microhabitat),
+         Diet = coalesce(Diet.x, Diet.y),
+         maximum_longevity_y = coalesce(`Maximum Longevity (years)`, maximum_longevity_y),
+         litter_size_n = coalesce(`maximum mean brood size`, litter_size_n),
+         litters_per_year_n = coalesce(`Yearly broods (maximum)`, litters_per_year_n)) %>%
+  select(TAXON_ID, Sci_Name, Sci_Name_Alt, Mass_g, Microhabitat, Habitat, Diet, maximum_longevity_y, 
+         litter_size_n, litters_per_year_n)
 
 reptiles = reptiles %>% 
+  left_join(reptiles.traits.combined, by=c("TAXON_ID", "Sci_Name", "Sci_Name_Alt")) %>%
   mutate(Terrestrial = case_when(is.na(Microhabitat) ~ NA_real_,
                                  Microhabitat %in% c("Terrestrial",
-                                                     "Arboreal/Terrestrial",
-                                                     "Fossorial/Saxicolous/Terrestrial",
-                                                     "Fossorial/Terrestrial",
-                                                     "Cryptic/Terrestrial",
-                                                     "Arboreal/Saxicolous/Terrestrial",
-                                                     "Saxicolous/Terrestrial") ~ 1,TRUE ~ 0),
+                                                     "Arboreal&Terrestrial",
+                                                     "Fossorial&Saxicolous&Terrestrial",
+                                                     "Fossorial&Terrestrial",
+                                                     "Cryptic&Terrestrial",
+                                                     "Arboreal&Saxicolous&Terrestrial",
+                                                     "Saxicolous&Terrestrial") ~ 1,TRUE ~ 0),
          Arboreal_Insessorial = case_when(is.na(Microhabitat) ~ NA_real_,
-                                          Microhabitat %in% c("Arboreal/Saxicolous",
-                                                              "Arboreal/Terrestrial",
-                                                              "Arboreal/Saxicolous/Terrestrial")~ 1,TRUE ~ 0),
+                                          Microhabitat %in% c("Arboreal&Saxicolous",
+                                                              "Arboreal&Terrestrial",
+                                                              "Arboreal&Saxicolous&Terrestrial")~ 1,TRUE ~ 0),
          Saxicolous = case_when(is.na(Microhabitat) ~ NA_real_,
-                                Microhabitat %in% c("Arboreal/Saxicolous",
-                                                    "Saxicolous/Terrestrial",
-                                                    "Fossorial/Saxicolous/Terrestrial",
+                                Microhabitat %in% c("Arboreal&Saxicolous",
+                                                    "Saxicolous&Terrestrial",
+                                                    "Fossorial&Saxicolous&Terrestrial",
                                                     "Saxicolous",
-                                                    "Arboreal/Saxicolous/Terrestrial")~ 1,TRUE ~ 0),
+                                                    "Arboreal&Saxicolous&Terrestrial")~ 1,TRUE ~ 0),
          Fossorial = case_when(is.na(Microhabitat) ~ NA_real_, 
                                Microhabitat %in% c("Fossorial",
-                                                   "Fossorial/Saxicolous/Terrestrial",
-                                                   "Fossorial/Terrestrial")~ 1,TRUE ~ 0),
+                                                   "Fossorial&Saxicolous&Terrestrial",
+                                                   "Fossorial&Terrestrial")~ 1,TRUE ~ 0),
          Aquatic = case_when(is.na(Microhabitat) ~ NA_real_,
-                             Microhabitat %in% c("Semiaquatic",
+                             Microhabitat %in% c("Semi-Aquatic",
                                                  "Aquatic")~ 1,TRUE ~ 0),
          Cryptic = case_when(is.na(Microhabitat) ~ NA_real_,
-                             Microhabitat %in% c("Cryptic/Terrestrial",
+                             Microhabitat %in% c("Cryptic&Terrestrial",
                                                  "Cryptic")~ 1,TRUE ~ 0),
          Omnivore = case_when(is.na(Diet) ~ NA_real_,Diet == "Omnivorous" ~ 1,TRUE ~ 0),
          Carnivore = case_when(is.na(Diet) ~ NA_real_,Diet== "Carnivorous" ~ 1,TRUE ~ 0),
@@ -442,7 +468,8 @@ reptiles = reptiles %>%
 
 smp.reptiles = Reptiles_traits %>%
   mutate(home_range_km2 = MaleHomerange_aver, 
-         dispersal_km = MaleDispersal_distance_aver)
+         dispersal_km = MaleDispersal_distance_aver, 
+         AdultDiet = case_when(AdultDiet==""~NA, TRUE~AdultDiet)) 
          
 reptiles = left_join(reptiles, smp.reptiles, by = c("TAXON_ID"="TaxonCode"))
 reptiles = left_join(reptiles, patch, by = c("TAXON_ID"))
@@ -452,13 +479,18 @@ reptiles = left_join(reptiles, sev.fire, by = c("TAXON_ID"="TaxonCode"))
 reptiles = left_join(reptiles, fame, by = c("TAXON_ID"))
 
 vic_reptile_traits = reptiles %>%
+  mutate(diet = coalesce(AdultDiet,diet)) %>%
+  mutate(Omnivore = case_when(is.na(diet) ~ NA_real_,diet %in% c("Omnivore","Carnivore/Omnivore") ~ 1,TRUE ~ 0),
+         Invertivore = case_when(is.na(diet) ~ NA_real_,diet == "Invertivore" ~ 1,TRUE ~ 0),
+         Carnivore = case_when(is.na(diet) ~ NA_real_,diet %in% c("Carnivore", "Carnivore/Omnivore") ~ 1,TRUE ~ 0),
+         Herbivore = case_when(is.na(diet) ~ NA_real_,diet== "Herbivore" ~ 1,TRUE ~ 0)) %>%
   mutate(max_longevity_d = maximum_longevity_y*365,
          Genus = sub("^(\\w+).*", "\\1", Sci_Name),
          n_offspring_year = litter_size_n*litters_per_year_n,
          home_range_km2 = home_range_km2,
          dispersal_km = dispersal_km,
          volant = 0,
-         hibernation_torpor = NA, 
+         hibernation_torpor = 1, 
          diet_breadth_n = NA, 
          stratum = NA,
          stratum_aerial = 0,
@@ -473,7 +505,7 @@ vic_reptile_traits = reptiles %>%
          diet = diet,
          diet_carnivore = Carnivore, 
          diet_herbivore = Herbivore,
-         diet_invertivore = NA, 
+         diet_invertivore = Invertivore, 
          diet_infloresence = Herbivore,
          diet_omnivore = Omnivore,
          diet_granivore = Herbivore
@@ -677,40 +709,14 @@ vic_frog_traits = frogs %>%
          fame_lm_slope = lm_slope
   )
 
-#### Clean up bits and pieces ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-vic_mammal_traits = vic_mammal_traits %>% mutate(diet = case_when(diet == "H" ~ "Herbivore",
-                                                                  diet == "O" ~ "Omnivore",
-                                                                  diet == "I" ~ "Invertivore",
-                                                                  diet == "INF" ~ "Infloresence", TRUE~NA),
-                                                 nesting = case_when(nesting=="H" ~ "Hollows",
-                                                                     nesting=="G" ~ "Ground",
-                                                                     nesting=="N" ~ "Branches",
-                                                                     nesting=="B" ~ "Burrows", 
-                                                                     nesting=="P" ~ "Branches", 
-                                                                     nesting=="C" ~ "Cave", 
-                                                                     nesting=="V" ~ "Branches", TRUE~NA))
-
-# vic_reptile_traits = vic_reptile_traits %>% mutate(diet = case_when(diet == "H" ~ "Herbivore",
-#                                                                   diet == "O" ~ "Omnivore",
-#                                                                   diet == "I" ~ "Invertivore",
-#                                                                   diet == "INF" ~ "Infloresence", TRUE~NA),
-#                                                  nesting = case_when(nesting=="H" ~ "Hollows",
-#                                                                      nesting=="G" ~ "Ground",
-#                                                                      nesting=="N" ~ "Branches",
-#                                                                      nesting=="B" ~ "Burrows", 
-#                                                                      nesting=="P" ~ "Branches", 
-#                                                                      nesting=="C" ~ "Cave", 
-#                                                                      nesting=="V" ~ "Branches", TRUE~NA))
-
-
 #### Compile into one database ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vic_fauna_traits = rbind(vic_mammal_traits, vic_bird_traits, vic_reptile_traits, vic_frog_traits)
 
 saveRDS(vic_mammal_traits, "data_clean/vic_mammal_traits.Rds")
 saveRDS(vic_bird_traits, "data_clean/vic_birds_traits.Rds")
 saveRDS(vic_reptile_traits, "data_clean/vic_reptile_traits.Rds")
 saveRDS(vic_frog_traits, "data_clean/vic_frog_traits.Rds")
 
-vic_fauna_traits = rbind(vic_mammal_traits, vic_bird_traits, vic_reptile_traits, vic_frog_traits)
 
 summary(vic_fauna_traits)
 
