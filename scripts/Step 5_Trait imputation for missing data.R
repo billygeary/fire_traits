@@ -42,7 +42,7 @@ imputed_data <- mice(vic_mammal_traits[,1:40],
 
 # Bring imputed data back into the dataset 
 vic_mammal_traits_imputed <- complete(imputed_data)
-vic_mammal_traits_imputed <- cbind(vic_mammal_traits_imputed, vic_mammal_traits[,41:49])
+vic_mammal_traits_imputed <- cbind(vic_mammal_traits_imputed, vic_mammal_traits[,41:48])
 
 # Save
 saveRDS(vic_mammal_traits_imputed, "data_clean/vic_mammal_traits_imputed.Rds")# Mammals
@@ -74,7 +74,7 @@ imputed_data <- mice(vic_bird_traits[,1:40],
 
 # Bring imputed data back into the dataset 
 vic_bird_traits_imputed <- complete(imputed_data)
-vic_bird_traits_imputed <- cbind(vic_bird_traits_imputed, vic_bird_traits[,41:49])
+vic_bird_traits_imputed <- cbind(vic_bird_traits_imputed, vic_bird_traits[,41:48])
 
 # Save
 saveRDS(vic_bird_traits_imputed, "data_clean/vic_bird_traits_imputed.Rds")
@@ -134,7 +134,7 @@ vic_frog_traits = vic_fauna_traits %>% filter(Taxa_Group=="Amphibians") %>% drop
 #pred.mat = matrix(rep(pred.mat, each = length(pred.mat)), nrow = length(pred.mat), byrow = TRUE)
 
 # Pick the traits we actually have enough data to impute - the rest will stay NAs
-vic_frog_traits_to_impute = vic_frog_traits %>% select(c(1:8, Mass_g, n_offspring_year))
+vic_frog_traits_to_impute = vic_frog_traits %>% select(c(1:8, Mass_g, litter_size_n, n_offspring_year))
 
 pred.mat = as.matrix(c(0,0,0,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1))
 pred.mat = pred.mat[1:ncol(vic_frog_traits_to_impute),1]
@@ -158,7 +158,7 @@ vic_frog_traits_imputed <- complete(imputed_data)
 
 
 vic_frog_traits_imputed <- vic_frog_traits %>%
-  select(-all_of(names(vic_frog_traits_to_impute)[2:10])) %>%  # Remove columns in df1 that need replacement
+  select(-all_of(names(vic_frog_traits_to_impute)[2:11])) %>%  # Remove columns in df1 that need replacement
   left_join(vic_frog_traits_imputed, by = "Taxon_ID")  %>%         # Join with df2 to bring in the replacement columns
   select(all_of(names(vic_fauna_traits)))
 

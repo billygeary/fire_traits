@@ -24,8 +24,10 @@ frog.traits = read.csv("data_raw/amphibians/AmphiBIO_v1.csv")
 reptile.traits =  read_excel("data_raw/reptiles/ReptTraits%20dataset%20v1-1.xlsx")
 squambase.traits =  read_excel("data_raw/reptiles/SquamBase1.xlsx")
 
+vicfrog.traits = read_excel("data_raw/amphibians/traits_frogsofvictoria.xlsx")
+
 pyromes = read.csv("data_clean/pyrome_species.csv") %>% select(-X)
-fame = read.csv("data_clean/fame_erp_slopes.csv") %>% select(-X)
+fame = read.csv("data_clean/fame_combined_slopes.csv") %>% select(-X, -lm_slope, -ee_lm_slope)
 
 patch = read.csv("data_clean/patchmetrics_species.csv") %>% select(-X)
 patch$TAXON_ID <- as.numeric(str_extract(patch$filename, "(?<=Spp)\\d+(?=_)"))
@@ -200,8 +202,8 @@ vic_mammal_traits = mammals %>%
          # Fire vulnerability
          meanben_firefreq = meanBen_FireFreq, 
          future_fire_impact = FutureImpact, 
-         fame_curve_shape = curve_shape, 
-         fame_lm_slope = lm_slope
+         #fame_curve_shape = curve_shape, 
+         fame_lm_slope = fame_lm_slope
          )
 
 
@@ -369,8 +371,8 @@ vic_bird_traits = birds %>%
          # Fire vulnerability
          meanben_firefreq = meanBen_FireFreq, 
          future_fire_impact = FutureImpact, 
-         fame_curve_shape = curve_shape, 
-         fame_lm_slope = lm_slope
+         #fame_curve_shape = curve_shape, 
+         fame_lm_slope = fame_lm_slope
   )
 
 out = rbind(vic_mammal_traits, vic_bird_traits)
@@ -572,8 +574,8 @@ vic_reptile_traits = reptiles %>%
          # Fire vulnerability
          meanben_firefreq = meanBen_FireFreq, 
          future_fire_impact = FutureImpact, 
-         fame_curve_shape = curve_shape, 
-         fame_lm_slope = lm_slope
+         #fame_curve_shape = curve_shape, 
+         fame_lm_slope = fame_lm_slope
   )
 
 out = rbind(vic_reptile_traits, vic_bird_traits, vic_mammal_traits)
@@ -603,7 +605,17 @@ frogs = left_join(frogs, frog.traits, by = c("Sci_Name_Alt"="Species"))
 
 smp.frogs = Amphibians_traits %>%
   mutate(
-    nest_burrow = case_when(is.na(Burrow) ~ NA_real_,Burrow > 0 ~ 1, TRUE~0))
+    stratum_aquatic_smp = case_when(AquaticAdult>0 ~ 1, TRUE~0),
+    nest_burrow_smp = case_when(is.na(Burrow) ~ NA_real_,Burrow > 0 ~ 1, TRUE~0))
+
+vicfrog.traits = vicfrog.traits %>%
+  select(Taxon_ID, Scientific_Name, Scientific_Name_Alt, 
+         stratum, stratum_aerial, stratum_arboreal_insessorial, stratum_aquatic, stratum_cryptic, stratum_fossorial, stratum_generalist, stratum_saxicolous, stratum_terrestrial,
+         nesting, nest_burrow, nest_cave, nest_ground, nest_hollows, nest_branch,
+         diet, diet_breadth_n, diet_carnivore, diet_herbivore, diet_invertivore, diet_infloresence, diet_omnivore, diet_granivore,
+         litter_size_n, litters_per_year_n)
+
+frogs = left_join(frogs, vicfrog.traits , by = c("TAXON_ID"="Taxon_ID"))
 
 frogs = left_join(frogs, smp.frogs, by = c("TAXON_ID"="TaxonCode"))
 frogs = left_join(frogs, patch, by = c("TAXON_ID"))
@@ -615,33 +627,33 @@ frogs = left_join(frogs, fame, by = c("TAXON_ID"))
 vic_frog_traits = frogs %>%
   mutate(max_longevity_d = maximum_longevity_y*365,
          Genus = sub("^(\\w+).*", "\\1", Sci_Name),
-         n_offspring_year = Reproductive_output_y,
-         litter_size_n = NA, 
-         litters_per_year_n = NA, 
+         n_offspring_year = litters_per_year_n*litter_size_n,
+         litter_size_n = litter_size_n, 
+         litters_per_year_n = litters_per_year_n, 
          home_range_km2 = NA,
          dispersal_km = NA,
          volant = 0,
          hibernation_torpor = NA, #######
          diet_breadth_n = NA, 
          stratum = NA,
-         stratum_saxicolous = 0, 
-         stratum_aerial = 0,
-         stratum_generalist = 0,
-         stratum_cryptic = 0,
+         stratum_saxicolous = stratum_saxicolous, 
+         stratum_aerial = stratum_aerial,
+         stratum_generalist = stratum_generalist,
+         stratum_cryptic = stratum_cryptic,
          nesting = NA, 
          nest_burrow = nest_burrow, 
-         nest_cave = 0, 
-         nest_ground = NA, 
+         nest_cave = nest_cave, 
+         nest_ground = nest_ground, 
          nest_hollows = 0, 
          nest_branch=0,
          diet_breadth_n = NA, 
          diet = NA,
-         diet_carnivore = NA, 
-         diet_herbivore = case_when(Leaves==1~1, TRUE~NA),
-         diet_invertivore = case_when(Arthro==1~1, TRUE~NA), 
-         diet_infloresence = case_when(Fruits==1|Flowers==1~1, TRUE~NA),
-         diet_omnivore = NA,
-         diet_granivore = case_when(Seeds==1~1, TRUE~NA)
+         diet_carnivore = diet_carnivore, 
+         diet_herbivore = diet_herbivore,
+         diet_invertivore = diet_invertivore, 
+         diet_infloresence = diet_infloresence,
+         diet_omnivore = diet_omnivore,
+         diet_granivore = diet_granivore
   ) %>%
   # Taxonomic Information
   select(Taxon_ID = TAXON_ID,
@@ -659,13 +671,13 @@ vic_frog_traits = frogs %>%
          # Stratum
          stratum = stratum,
          stratum_aerial = stratum_aerial,
-         stratum_arboreal_insessorial = Arboreal_Insessorial,
-         stratum_aquatic = Aquatic,
+         stratum_arboreal_insessorial = stratum_arboreal_insessorial,
+         stratum_aquatic = stratum_aquatic_smp, # Aquatic adult
          stratum_cryptic = stratum_cryptic,
-         stratum_fossorial = Fossorial,
+         stratum_fossorial = stratum_fossorial,
          stratum_generalist = stratum_generalist,
          stratum_saxicolous = stratum_saxicolous,
-         stratum_terrestrial = Terrestrial,
+         stratum_terrestrial = stratum_terrestrial,
          #Nesting 
          nesting = nesting, 
          nest_burrow = nest_burrow,
@@ -705,8 +717,8 @@ vic_frog_traits = frogs %>%
          # Fire vulnerability
          meanben_firefreq = meanBen_FireFreq, 
          future_fire_impact = FutureImpact, 
-         fame_curve_shape = curve_shape, 
-         fame_lm_slope = lm_slope
+         #fame_curve_shape = curve_shape, 
+         fame_lm_slope = fame_lm_slope
   )
 
 #### Compile into one database ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

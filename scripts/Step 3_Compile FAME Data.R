@@ -11,6 +11,7 @@
 
 # Compile FAME data
 library(MuMIn)
+library(tidyverse)
 fame = read.csv("data_raw/DEECA data/ERP28_2andNorthernMattleeBirdcurves/ERP28_2andNorthernMattleeBirdcurves.csv")
 ids = na.omit(unique(fame$TAXON_ID))
 
@@ -120,5 +121,14 @@ fame.data = ee.data.out.cats %>% select(TAXON_ID, ee_model, ee_lm_slope)
 
 write.csv(fame.data, "data_clean/fame_ffo_slopes.csv")
 
+### Combined data
+### For each species, if we have erp data, use that, otherwise use ffos. 
+erp = read.csv("data_clean/fame_erp_slopes.csv") %>% select(TAXON_ID, lm_slope)
+ffo = read.csv("data_clean/fame_ffo_slopes.csv") %>% select(TAXON_ID, ee_lm_slope)
+
+fame_slopes = full_join(erp, ffo)
+fame_slopes$fame_lm_slope = ifelse(is.na(fame_slopes$lm_slope), fame_slopes$ee_lm_slope, fame_slopes$lm_slope)
+
+write.csv(fame_slopes, "data_clean/fame_combined_slopes.csv")
 
 
