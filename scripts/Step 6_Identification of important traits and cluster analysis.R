@@ -29,24 +29,36 @@ library(pdp)
 library(vegan)
 library(mclust)
 library(cluster)
+library(cowplot)
 
 source("scripts/brt.functions.R")
 source("scripts/trait_analysis_functions.R")
 
 # Read in the imputed data
-vic_fauna_traits_imputed = readRDS("data_clean/vic_fauna_traits_imputed.Rds")
+vic_fauna_traits_imputed = readRDS("data_clean/trait_outputs/vic_fauna_traits_imputed.Rds")
 
+vic_fauna_traits_imputed = vic_fauna_traits_imputed  %>% 
+  mutate(across(c("nesting", "nest_burrow","nest_cave","nest_ground","nest_hollows","nest_branch",
+                  "stratum","stratum_aerial","stratum_arboreal_insessorial", "stratum_aquatic",
+                  "stratum_cryptic","stratum_fossorial", "stratum_terrestrial", "stratum_saxicolous",
+                  "diet","diet_breadth_n","diet_carnivore","diet_herbivore",
+                  "diet_invertivore","diet_infloresence","diet_omnivore","diet_granivore",
+                  "dominant_pyrome", "volant", "hibernation_torpor"), as.factor))
+
+# What is our data coverage for each variable
+summary_data = vic_fauna_traits_imputed %>% 
+  group_by(Taxa_Group) %>%
+  summarise(recent_fire = sum(!is.na(fame_lm_slope)),
+            frequent_fire = sum(!is.na(meanben_firefreq)),
+            severe_fire = sum(!is.na(future_fire_impact)),
+            total_spp = n())
+summary_data
 #################
 #### Mammals #### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #################
 #### Find Important Traits ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #### Part 1 - Select the traits for inclusion
-mammal_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Mammals") %>% mutate(stratum = as.factor(stratum),
-                                                                                      nesting = as.factor(nesting),
-                                                                                      diet = as.factor(diet),
-                                                                                      dominant_pyrome = as.factor(dominant_pyrome),
-                                                                                      volant = as.factor(volant), 
-                                                                                      hibernation_torpor = as.factor(hibernation_torpor))
+mammal_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Mammals")
 
 # Define the trait groups
 trait_groups = list(Movement_Physiology = c("Mass_g", "home_range_km2", "dispersal_km",  "max_longevity_d"),
@@ -55,8 +67,8 @@ trait_groups = list(Movement_Physiology = c("Mass_g", "home_range_km2", "dispers
                     Microhabitat = c("stratum","stratum_aerial","stratum_arboreal_insessorial", "stratum_aquatic","stratum_cryptic","stratum_fossorial", "stratum_terrestrial", "stratum_saxicolous"),
                     Nesting = c("nesting", "nest_burrow","nest_cave","nest_ground","nest_hollows","nest_branch"),
                     Behaviour = c("hibernation_torpor", "volant"),
-                    Diet = c("diet","diet_breadth_n","diet_animals","diet_plants", "diet_carnivore","diet_herbivore",
-                             "diet_invertivore","diet_infloresence","diet_omnivore","diet_granivore", "diet_simple"),
+                    Diet = c("diet","diet_breadth_n","diet_carnivore","diet_herbivore",
+                             "diet_invertivore","diet_infloresence","diet_omnivore","diet_granivore"),
                     Biogeography = c("biggest_patch_size","n_habitat_patches","patch_isolation", "pyrome_breadth"))
 
 # Convert the list to a data frame using stack
@@ -66,14 +78,21 @@ trait_df <- stack(trait_groups)
 colnames(trait_df) <- c("var", "Group")
 
 # Traits of interest
-all_traits <- c("Mass_g", "home_range_km2", "dispersal_km", "stratum", "nesting", "volant", "hibernation_torpor", 
-                "diet", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
-                "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth", "stratum_aquatic")
+all_traits <- c("Mass_g", "home_range_km2", "dispersal_km", 
+                "stratum_aerial", "stratum_arboreal_insessorial", "stratum_aquatic", "stratum_terrestrial", 
+                "nest_burrow", "nest_cave", "nest_ground", "nest_hollows", "nest_branch", 
+                "diet_carnivore", "diet_herbivore", "diet_invertivore", "diet_infloresence", "diet_omnivore", 
+                "volant", "hibernation_torpor", 
+                "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
+                "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth")
 
 all_traits_clean_names = data.frame(var = all_traits, 
-                                    traits_label = c("Mass (g)", "Home Range (km2)", "Dispersal (km)", "Stratum", "Nesting Preference",
-                                                     "Volant", "Hibernation/Torpor", "Diet Category", "Litter Size", "Litters/Yr", "Longevity", "Offspring/Yr", 
-                                                     "Size of Largest Habitat Patch", "Number of Habitat Patches", "Dominant Pyrome", "Pyrome Breadth", "Aquatic"))
+                                    traits_label = c("Mass (g)", "Home Range (km2)", "Dispersal (km)", 
+                                                     "Stratum - Aerial", "Stratum - Arboreal", "Stratum - Aquatic", "Stratum - Terrestrial", 
+                                                     "Nesting - Burrow","Nesting - Cave","Nesting - Ground","Nesting - Hollows","Nesting - Branches",
+                                                     "Diet - Carnivore", "Diet - Herbivore", "Diet - Invertivore", "Diet - Infloresence", "Diet - Omnivore", 
+                                                     "Volant", "Hibernation/Torpor","Litter Size", "Litters/Yr", "Longevity", "Offspring/Yr", 
+                                                     "Size of Largest Habitat Patch", "Number of Habitat Patches", "Dominant Pyrome", "Pyrome Breadth"))
 trait_df = left_join(trait_df, all_traits_clean_names)
 
 # Create the formula for each model
@@ -84,11 +103,11 @@ traits_formula_fame <- as.formula(paste("fame_lm_slope", "~", paste(all_traits, 
 smp_modelling = mammal_traits %>% select(meanben_firefreq, all_of(all_traits)) %>%
   drop_na(meanben_firefreq)
 mammal_brt_smp <- gbm.step(data = smp_modelling, 
-                           gbm.x = 2:17,
+                           gbm.x = 2:28,
                            gbm.y = 1,
                            family = "gaussian", 
                            tree.complexity = 2, 
-                           learning.rate = 0.005,
+                           learning.rate = 0.001,
                            bag.fraction = 0.5)
 
 # Look at the variable importance
@@ -110,15 +129,16 @@ ggsave(plot = mammal_smp_pdp, filename = "plots/mammal.smp.pdp.jpg", width = 8, 
 #### Recent Fire (FAME Slopes)
 # Fit the model as a Boosted Regression Tree
 fame_modelling = mammal_traits %>% select(fame_lm_slope, all_of(all_traits)) %>%
-  drop_na(fame_lm_slope)
+  drop_na(fame_lm_slope) %>% select(-c(stratum_aquatic, nest_cave)) %>%
+  mutate(fame_lm_slope = 1000*fame_lm_slope)
 
 mammal_brt_fame <- gbm.step(data = fame_modelling, 
-                           gbm.x = 2:17,
+                           gbm.x = 2:26,
                            gbm.y = 1,
                            family = "gaussian", 
-                           tree.complexity = 2, 
-                           learning.rate = 0.005,
-                           bag.fraction = 0.5)
+                           tree.complexity = 1, 
+                           learning.rate = 0.001,
+                           bag.fraction = 0.75)
 
 summary(mammal_brt_fame)
 
@@ -137,12 +157,14 @@ pdp_data <- lapply(mammal_brt_fame$var.names, get_pdp_data, model =mammal_brt_fa
 mammal_pdps <- lapply(pdp_data, create_pdp_plots, factor_vars)
 mammal_fame_pdp <- wrap_plots(mammal_pdps, ncol = 4)  # 5 rows, 3 columns
 mammal_fame_pdp
+
 ggsave(plot = mammal_fame_pdp, filename = "plots/mammal.fame.pdp.jpg", width = 8, height = 5, scale=2)
 
 # Plot the results
 mammal.importance.data = rbind(fame.mammal.importance, smp.mammal.importance)
 mammal.importance.plot = mammal.importance.data %>% 
-  mutate(fire.var= fct_rev(fire.var)) %>% 
+  filter(rel.inf > 0) %>%
+  mutate(fire.var = factor(fire.var, levels = c("Recent Fire", "Frequent Fire"))) %>%
   ggplot(aes(x = traits_label, y = rel.inf, fill = Group)) + geom_col() + 
   labs(fill = "Trait Group", x="Trait", y = "Relative Influence (%)", title="Mammal Trait Importance") + facet_wrap(~fire.var, nrow=1) +
   scale_fill_viridis_d() + theme_minimal() +
@@ -260,8 +282,11 @@ birds_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Birds") %>% muta
                                                                                       diet= as.factor(diet),
                                                                                       dominant_pyrome = as.factor(dominant_pyrome)) %>% droplevels()
 # Traits of interest
-all_traits <- c("Mass_g", "stratum", "nesting", "stratum_aquatic",
-                "diet", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
+all_traits <- c("Mass_g", 
+                "stratum_aerial", "stratum_arboreal_insessorial", "stratum_aquatic", "stratum_terrestrial", 
+                "nest_ground", "nest_hollows", "nest_branch", 
+                "diet_invertivore", "diet_omnivore", 
+                "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
                 "biggest_patch_size", "n_habitat_patches", 
                 "dominant_pyrome", "pyrome_breadth")
 # Create the formula
@@ -274,11 +299,11 @@ smp_modelling = birds_traits %>% select(meanben_firefreq, all_of(all_traits)) %>
   drop_na(meanben_firefreq)
 
 birds.brt.smp <- gbm.step(data = smp_modelling, 
-                          gbm.x = 2:14,
+                          gbm.x = 2:19,
                           gbm.y = 1,
                           family = "gaussian", 
                           tree.complexity = 2, 
-                          learning.rate = 0.005,
+                          learning.rate = 0.001,
                           bag.fraction = 0.5)
 # Look at the variable importance
 smp.bird.importance = summary(birds.brt.smp)  # Variable importance
@@ -298,14 +323,15 @@ ggsave(plot = bird_smp_pdp, filename = "plots/bird.smp.pdp.jpg", width = 8, heig
 
 #### Recent Fire
 fame_modelling = birds_traits %>% select(fame_lm_slope, all_of(all_traits)) %>%
-  drop_na(fame_lm_slope)
+  drop_na(fame_lm_slope)%>%
+  mutate(fame_lm_slope = 1000*fame_lm_slope)
 
 birds.brt.fame <- gbm.step(data = fame_modelling, 
-                          gbm.x = 2:14,
+                          gbm.x = 2:19,
                           gbm.y = 1,
                           family = "gaussian", 
                           tree.complexity = 2, 
-                          learning.rate = 0.005,
+                          learning.rate = 0.001,
                           bag.fraction = 0.5)
 
 # Partial Dependence Plots
@@ -327,6 +353,8 @@ fame.bird.importance.plot = fame.bird.importance %>%
 bird.importance = rbind(smp.bird.importance.plot, fame.bird.importance.plot)
 
 bird.importance.plot = bird.importance %>%
+  filter(rel.inf > 0) %>%
+  mutate(fire.var = factor(fire.var, levels = c("Recent Fire", "Frequent Fire"))) %>%
 ggplot(aes(x = traits_label, y = rel.inf, fill = Group)) + geom_col() + 
   labs(fill = "Trait Group", x="Trait", y = "Relative Influence (%)", title="Bird Trait Importance") + 
   facet_wrap(~fire.var, nrow=1) +
@@ -404,9 +432,11 @@ reptile_traits = vic_fauna_traits_imputed %>% filter(Taxa_Group=="Reptiles") %>%
     mutate(across(c(stratum, nesting, diet, dominant_pyrome, stratum_aerial, stratum_arboreal_insessorial, stratum_aquatic,
                     stratum_fossorial, stratum_saxicolous, stratum_terrestrial), as.factor))
 # Traits of interest
-all_traits <- c("Mass_g", "home_range_km2", "dispersal_km", "stratum_arboreal_insessorial", "stratum_aquatic",
+all_traits <- c("Mass_g", "home_range_km2", "dispersal_km", 
+                "stratum_arboreal_insessorial", "stratum_aquatic",
                 "stratum_fossorial", "stratum_saxicolous", "stratum_terrestrial",
-                "diet", "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
+                "diet_carnivore", "diet_invertivore", "diet_omnivore",
+                "litter_size_n", "litters_per_year_n", "max_longevity_d", "n_offspring_year",
                 "biggest_patch_size", "n_habitat_patches", "dominant_pyrome", "pyrome_breadth")
 
 # Create the formula
@@ -428,11 +458,10 @@ reptile.brt.smp <- gbm(
   distribution = "gaussian",
   n.trees = 3000,        # Number of trees
   interaction.depth = 1, # Tree depth to capture interactions
-  shrinkage = 0.01,      # Learning rate
+  shrinkage = 0.00001,      # Learning rate
   bag.fraction = 0.5, 
   cv.folds = 10           # Cross-validation for tuning
 )
-
 
 (smp.reptile.importance <- summary(reptile.brt.smp))
 
@@ -442,7 +471,7 @@ reptile.brt.fame <- gbm(
   distribution = "gaussian",
   n.trees = 3000,        # Number of trees
   interaction.depth = 1, # Tree depth to capture interactions
-  shrinkage = 0.01,      # Learning rate
+  shrinkage = 0.00001,      # Learning rate
   bag.fraction = 0.5, 
   cv.folds = 10           # Cross-validation for tuning
 )
@@ -479,6 +508,8 @@ smp.reptile.importance.plot = smp.reptile.importance %>%
 reptile.importance = rbind(smp.reptile.importance.plot, fame.reptile.importance.plot)
 
 reptile.importance.plot = reptile.importance %>%   
+  filter(rel.inf > 0) %>%
+  mutate(fire.var = factor(fire.var, levels = c("Recent Fire", "Frequent Fire"))) %>%
 ggplot(aes(x = var, y = rel.inf, fill = Group)) + geom_col() + 
   labs(fill = "Trait Group", x="Trait", y = "Relative Influence (%)", title="Reptile Trait Importance") + 
   scale_fill_viridis_d() + theme_minimal() + facet_wrap(~fire.var,nrow=1) +
